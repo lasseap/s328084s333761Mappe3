@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_my_calendar"
+            app:tint="@color/black"/>
+
+        <EditText
+            android:id="@+id/etasjeNrinn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/etasjeNrInn" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            app:tint="@color/black"
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_call" />
+
+        <EditText
+            android:id="@+id/romNrinn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/romNrInn" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            app:tint="@color/black"
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_call" />
+
+        <EditText
+            android:id="@+id/kapasitetInn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/kapasitetInn" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            app:tint="@color/black"
+            android:id="@+id/imageView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_call" />
+
+        <EditText
+            android:id="@+id/beskrivelseInn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/romBeskrivelseInn" />
+    </LinearLayout>
+</LinearLayout>

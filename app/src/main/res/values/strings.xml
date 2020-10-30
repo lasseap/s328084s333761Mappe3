@@ -1,4 +1,17 @@
 <resources>
     <string name="app_name">s328084s333761Mappe3</string>
     <string name="title_activity_maps">Map</string>
+    <string name="velgDato">Velg dato</string>
+    <string name="velgTidspunkt">Velg tidspunkt</string>
+    <string name="leggTilRomReservasjon">Ny romreservasjon</string>
+    <string name="leggTilRom">Nytt rom</string>
+    <string name="leggTilBygg">Nytt bygg</string>
+    <string name="etasjeNrInn">Skriv inn etasjen til rommet</string>
+    <string name="romNrInn">Velg romnummer</string>
+    <string name="kapasitetInn">Skriv inn kapasiteten til rommet</string>
+    <string name="romBeskrivelseInn">Skriv inn rombeskrivelse</string>
+    <string name="antEtasjerInn">Skriv inn antall etasjer</string>
+    <string name="adresseInn">Skriv inn adresse</string>
+    <string name="koordinaterInn">Skriv inn koordinatene til bygget</string>
+    <string name="byggBeskrivelseInn">Skriv inn byggbeskrivelse</string>
 </resources>
