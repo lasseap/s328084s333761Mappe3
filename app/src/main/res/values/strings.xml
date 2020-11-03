@@ -14,4 +14,5 @@
     <string name="adresseInn">Skriv inn adresse</string>
     <string name="koordinaterInn">Skriv inn koordinatene til bygget</string>
     <string name="byggBeskrivelseInn">Skriv inn byggbeskrivelse</string>
+    <string name="ikkeFyltUtKorrekt">Du må fylle ut alle felter med riktig innhold</string>
 </resources>

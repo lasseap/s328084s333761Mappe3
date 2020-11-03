@@ -20,11 +20,11 @@
             android:src="@android:drawable/ic_menu_my_calendar"
             app:tint="@color/black"/>
 
-        <EditText
+        <TextView
             android:id="@+id/adresseInn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/adresseInn" />
+            />
     </LinearLayout>
 
 
@@ -59,11 +59,11 @@
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_menu_call" />
 
-        <EditText
+        <TextView
             android:id="@+id/koordinaterInn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/koordinaterInn" />
+            />
     </LinearLayout>
 
     <LinearLayout

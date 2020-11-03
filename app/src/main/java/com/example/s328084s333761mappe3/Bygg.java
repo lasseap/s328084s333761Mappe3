@@ -5,5 +5,18 @@ public class Bygg {
     public String Beskrivelse;
     public String Adresse;
     public String Koordinater; //Splitte opp?
-    public int AntEtasjer;
+    public String AntEtasjer;
+
+    public Bygg(int Id, String Beskrivelse, String Adresse, String Koordinater, String AntEtasjer) {
+        this.Adresse = Adresse;
+        this.Id = Id;
+        this.Beskrivelse = Beskrivelse;
+        this.AntEtasjer = AntEtasjer;
+        this.Koordinater = Koordinater;
+    }
+
+    public Bygg() {
+
+    }
 }
+
