@@ -1,0 +1,55 @@
+package com.example.s328084s333761mappe3;
+
+import android.os.AsyncTask;
+import android.util.Log;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class SendJSON extends AsyncTask<String, Void,String> {
+
+    String json;
+
+    SendJSON(String json) {
+        this.json = json;
+    }
+    @Override
+    protected String doInBackground(String... urls) {
+        String retur = "";
+        String s = "";
+        String output = "";
+        for (String url : urls) {
+            try {
+                URL urlen = new URL(urls[0]);
+                HttpURLConnection conn = (HttpURLConnection)
+                        urlen.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json; utf-8");
+
+                conn.setRequestProperty("Accept",
+                        "application/json");
+                if (conn.getResponseCode() != 200) {
+                    throw new RuntimeException("Failed : HTTP error code : "
+                            + conn.getResponseCode());
+                }
+                conn.setDoOutput(true);
+                try(OutputStream os = conn.getOutputStream()) {
+                    byte[] input = json.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+               catch (Exception e){
+                    Log.d("TAG","Lagre Bygg på webserver feilet");
+                    return retur;
+               }
+
+                conn.disconnect();
+
+                return retur;
+            } catch (Exception e) {
+                Log.d("Tag","get bygg feilet");
+                return "";
+            }
+        }
+        return retur;
+    }
+}

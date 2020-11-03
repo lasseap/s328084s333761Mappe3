@@ -50,25 +50,23 @@ public class LeggTilBygg extends AppCompatActivity {
     }
 
     public void leggtil() {
-        try {
-            int antallEtasjer = Integer.parseInt(antEtasjer.getText().toString());
-            String beskrivelseTekst = beskrivelse.getText().toString();
-            String koordinaterTekst = koordinater.getText().toString();
-            String adresseTekst = adresse.getText().toString();
-            if(!beskrivelseTekst.equals("")){
-                jsonLeggTil(beskrivelseTekst,adresseTekst,koordinaterTekst,antallEtasjer);
-            }
-            else {
-                Toast.makeText(getApplicationContext(),R.string.ikkeFyltUtKorrekt, Toast.LENGTH_SHORT).show();
-            }
 
+        String antallEtasjer = antEtasjer.getText().toString();
+        String beskrivelseTekst = beskrivelse.getText().toString();
+        String koordinaterTekst = koordinater.getText().toString();
+        String adresseTekst = adresse.getText().toString();
+        if(!(beskrivelseTekst.equals("")&&(antallEtasjer.equals("")))){
+            jsonLeggTil(beskrivelseTekst,adresseTekst,koordinaterTekst,antallEtasjer);
         }
-        catch (Exception e){
+        else {
             Toast.makeText(getApplicationContext(),R.string.ikkeFyltUtKorrekt, Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void jsonLeggTil(String beskrivelse, String adresse, String koordinater, int antEtasjer) {
+    public void jsonLeggTil(String beskrivelse, String adresse, String koordinater, String antEtasjer) {
+        String json = "{Beskrivelse: " + beskrivelse + ", Adresse: " + adresse + ", Koordinater: "
+                + koordinater + ", AntEtasjer: " + antEtasjer + "}";
+        SendJSON task = new SendJSON(json);
 
     }
 }
