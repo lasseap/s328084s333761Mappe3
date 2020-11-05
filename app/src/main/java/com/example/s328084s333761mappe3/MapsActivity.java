@@ -1,7 +1,9 @@
 package com.example.s328084s333761mappe3;
 
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -15,6 +17,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener {
 
     public GoogleMap mMap;
+    public static Context contextOfApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +27,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        contextOfApplication = getApplicationContext();
+    }
+
+    public static Context getContextOfApplication(){
+        return contextOfApplication;
     }
 
     /**
@@ -46,6 +54,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         moveToCurrentLocation(pilestredet);
 
         mMap.setOnMapClickListener(this);
+        mMap.setOnMarkerClickListener(this);
     }
 
     @Override
@@ -57,7 +66,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public boolean onMarkerClick(Marker marker) {
+        visInfoDialog();
         return false;
+    }
+
+    public void visInfoDialog(){
+        DialogFragment dialog = new VisInfoDialogFragment();
+        dialog.show(getSupportFragmentManager(),"VisInfoDialog");
     }
 
     private void moveToCurrentLocation(LatLng currentLocation) {

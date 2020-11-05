@@ -38,7 +38,7 @@ public class SendJSON extends AsyncTask<String, Void,String> {
                     os.write(input, 0, input.length);
                 }
                catch (Exception e){
-                    Log.d("TAG","Lagre Bygg på webserver feilet");
+                    Log.d("TAG","Lagre Bygg på webserver feilet"  + e.getMessage());
                     return retur;
                }
 
@@ -46,7 +46,7 @@ public class SendJSON extends AsyncTask<String, Void,String> {
 
                 return retur;
             } catch (Exception e) {
-                Log.d("Tag","get bygg feilet");
+                Log.d("Tag","send bygg feilet" + e.getMessage());
                 return "";
             }
         }

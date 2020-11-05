@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/byggInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sett inn bygg her" />
+
+    <TextView
+        android:id="@+id/romInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/rom" />
+
+    <Button
+        android:id="@+id/leggTilRomKnapp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/leggTilRom" />
+
+    <TextView
+        android:id="@+id/reservasjonInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/reservasjoner" />
+
+    <Button
+        android:id="@+id/leggTilReservasjonKnapp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/leggTilRomReservasjon" />
+
+    <Button
+        android:id="@+id/avsluttKnapp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/avslutt" />
+</LinearLayout>

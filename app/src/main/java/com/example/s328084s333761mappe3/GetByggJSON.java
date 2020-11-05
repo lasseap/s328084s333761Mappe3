@@ -1,7 +1,11 @@
 package com.example.s328084s333761mappe3;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,6 +19,7 @@ import java.net.URL;
 
 public class GetByggJSON extends AsyncTask<String, Void,String> {
     JSONObject jsonObject;
+    SharedPreferences prefs;
 
     @Override
     protected String doInBackground(String... urls) {
@@ -57,10 +62,19 @@ public class GetByggJSON extends AsyncTask<String, Void,String> {
                 }
                 return retur;
             } catch (Exception e) {
-                Log.d("Tag","get bygg feilet");
+                Log.d("Tag","get bygg feilet" + e.getMessage());
                 return "";
             }
         }
         return retur;
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+        Context applicationContext = MapsActivity.getContextOfApplication();
+        prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(applicationContext.getString(R.string.byggUt),s);
+        editor.apply();
     }
 }
