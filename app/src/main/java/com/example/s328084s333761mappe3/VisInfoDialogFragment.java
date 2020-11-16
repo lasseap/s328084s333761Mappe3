@@ -57,12 +57,12 @@ public class VisInfoDialogFragment extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Get field from view
-        byggInfo =  view.findViewById(R.id.byggInfo);
-        romInfo =  view.findViewById(R.id.romInfo);
-        reservasjonInfo =  view.findViewById(R.id.reservasjonInfo);
-        avsluttKnapp = view.findViewById(R.id.avsluttKnapp);
-        leggTilRomKnapp = view.findViewById(R.id.leggTilRomKnapp);
-        leggTilReservasjonKnapp = view.findViewById(R.id.leggTilReservasjonKnapp);
+        byggInfo = (TextView) view.findViewById(R.id.byggInfo);
+        romInfo = (TextView) view.findViewById(R.id.romInfo);
+        reservasjonInfo = (TextView) view.findViewById(R.id.reservasjonInfo);
+        avsluttKnapp = (Button) view.findViewById(R.id.avsluttKnapp);
+        leggTilRomKnapp = (Button) view.findViewById(R.id.leggTilRomKnapp);
+        leggTilReservasjonKnapp = (Button) view.findViewById(R.id.leggTilReservasjonKnapp);
 
         avsluttKnapp.setOnClickListener(new View.OnClickListener() {
             @Override
