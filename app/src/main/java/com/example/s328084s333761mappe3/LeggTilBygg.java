@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+
 public class LeggTilBygg extends AppCompatActivity {
     TextView koordinater;
     TextView adresse;

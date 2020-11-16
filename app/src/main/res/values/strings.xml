@@ -19,4 +19,6 @@
     <string name="reservasjoner">Reservasjoner</string>
     <string name="avslutt">Avslutt</string>
     <string name="byggUt">ByggUt</string>
+    <string name="romUt">RomUt</string>
+    <string name="reservasjonUt">ReservasjonUt</string>
 </resources>

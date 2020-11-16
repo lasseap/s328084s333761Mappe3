@@ -79,7 +79,6 @@ public class VisInfoDialogFragment extends DialogFragment {
                         String[]{"http://student.cs.hioa.no/~s333761//jsoninBygg.php/?Beskrivelse=lasse&Adresse=adressen&Koordinater=koordinatene&AntEtasjer=antallet"});
 
 
-
                 GetByggJSON task2 = new GetByggJSON();
                 task2.execute(new
                         String[]{"http://student.cs.hioa.no/~s333761/jsonoutBygg.php"});
