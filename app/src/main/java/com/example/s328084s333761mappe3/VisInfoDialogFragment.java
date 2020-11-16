@@ -76,11 +76,13 @@ public class VisInfoDialogFragment extends DialogFragment {
             public void onClick(View view) {
                 SendJSON task = new SendJSON("{Beskrivelse: huset, Adresse: adressen, Koordinater: koordinatene, AntEtasjer: antallet}");
                 task.execute(new
-                        String[]{"https://www.cs.hioa.no/~s333761/jsoninBygg.php"});
+                        String[]{"http://student.cs.hioa.no/~s333761//jsoninBygg.php/?Beskrivelse=lasse&Adresse=adressen&Koordinater=koordinatene&AntEtasjer=antallet"});
+
+
 
                 GetByggJSON task2 = new GetByggJSON();
                 task2.execute(new
-                        String[]{"https://www.cs.hioa.no/~s333761/jsonoutBygg.php"});
+                        String[]{"http://student.cs.hioa.no/~s333761/jsonoutBygg.php"});
                 Context applicationContext = MapsActivity.getContextOfApplication();
                 prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext);
                 String bygg = prefs.getString(getString(R.string.byggUt),"Feilet, ikke noe i preferanser");

@@ -49,7 +49,7 @@ public class GetByggJSON extends AsyncTask<String, Void,String> {
                     JSONArray mat = new JSONArray(output);
 
                     JSONObject jsonobject = mat.getJSONObject(0);
-                    String id = jsonobject.getString("Id");
+                    String id = jsonobject.getString("id");
                     String beskrivelse = jsonobject.getString("Beskrivelse");
                     String adresse = jsonobject.getString("Adresse");
                     String koordinater = jsonobject.getString("Koordinater");

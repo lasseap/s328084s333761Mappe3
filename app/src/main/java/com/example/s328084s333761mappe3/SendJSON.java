@@ -32,7 +32,9 @@ public class SendJSON extends AsyncTask<String, Void,String> {
                     throw new RuntimeException("Failed : HTTP error code : "
                             + conn.getResponseCode());
                 }
+                /*
                 conn.setDoOutput(true);
+
                 try(OutputStream os = conn.getOutputStream()) {
                     byte[] input = json.getBytes("utf-8");
                     os.write(input, 0, input.length);
@@ -41,6 +43,8 @@ public class SendJSON extends AsyncTask<String, Void,String> {
                     Log.d("TAG","Lagre Bygg på webserver feilet"  + e.getMessage());
                     return retur;
                }
+
+                 */
 
                 conn.disconnect();
 
