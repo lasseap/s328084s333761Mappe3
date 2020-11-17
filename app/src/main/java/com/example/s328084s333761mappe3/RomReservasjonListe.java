@@ -1,0 +1,128 @@
+package com.example.s328084s333761mappe3;
+
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
+
+public class RomReservasjonListe extends AppCompatActivity {
+
+    private String rom_id;
+    SharedPreferences prefs;
+    public View v;
+
+    public RomReservasjonListe() {}
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.liste_meny, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.leggTilAction) {
+            //Når brukeren trykker på pluss-ikonet sendes bruker til LeggTilRomREservasjon-aktivitet
+            Intent leggTilIntent = new Intent(this,LeggTilRomReservasjon.class);
+            leggTilIntent.putExtra(getString(R.string.romUt),rom_id);
+            startActivity(leggTilIntent);
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+
+        return true;
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.romliste_layout);
+
+        Intent i = this.getIntent();
+        String rom_id = i.getExtras().getString("romUt");
+        GetRomJSON taskRom = new GetRomJSON();
+        taskRom.execute(new String[]{"http://student.cs.hioa.no/~s333761//jsonoutRom.php/?Id="+ rom_id});
+        ListView lv = (ListView) v.findViewById(R.id.liste);
+        TextView bygg_id = (TextView) v.findViewById(R.id.bygg_id);
+        TextView etasjeNr = (TextView) v.findViewById(R.id.etasjeNr);
+        TextView romNr = (TextView) v.findViewById(R.id.romNr);
+        TextView kapasitet = (TextView) v.findViewById(R.id.kapasitet);
+        TextView beskrivelse = (TextView) v.findViewById(R.id.beskrivelse);
+        String jsonBygg = prefs.getString(getString(R.string.byggUt),"");
+        String[] splittet = jsonBygg.split(";");
+        rom_id = splittet[0];
+        //Oppretter en liste med alle møte-objekter
+
+        GetRomJSON task = new GetRomJSON();
+        task.execute(new
+                String[]{"http://student.cs.hioa.no/~s333761//jsonoutRom.php/?Bygg_id="+bygg_id});
+        adresse.setText(splittet[2]);
+        beskrivelse.setText(splittet[1]);
+        koordinater.setText(splittet[3]);
+        antEtasjer.setText(splittet[4]);
+        String romJson = prefs.getString(getString(R.string.romUt),"");
+        ArrayList<Rom> rom = lagRomliste(romJson);
+        final RomAdapter adapter = new RomAdapter(this,rom);
+        lv.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Rom data = adapter.getItem(i);
+                Intent reservasjonIntent = new Intent(); //Åpne romreservasjon her
+            }
+        });
+    }
+
+    //Oppdaterer listefragmenetet
+    public void oppdater() {
+        ListView lv = (ListView) v.findViewById(R.id.liste);
+        GetRomJSON task = new GetRomJSON();
+        task.execute(new
+                String[]{"http://student.cs.hioa.no/~s333761//jsonoutRom.php/?Bygg_id="});
+        String romJson = prefs.getString(getString(R.string.romUt),"");
+        ArrayList<Rom> rom = lagRomliste(romJson);
+        final RomAdapter adapter = new RomAdapter(this,rom);
+        lv.setAdapter(adapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Rom data = adapter.getItem(i);
+                //Åpne romreservasjon her
+            }
+        });
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        oppdater();
+    }
+
+    public ArrayList<Rom> lagRomliste(String romJson) {
+        String[] splittet = romJson.split(":");
+        ArrayList<Rom> romliste = new ArrayList<>();
+        for (String string : splittet) {
+            String[] splittetRom = string.split(";");
+            Rom rom = new Rom();
+            rom.Id = Integer.parseInt(splittetRom[0]);
+            rom.Bygg_Id = Integer.parseInt(splittetRom[1]);
+            rom.EtasjeNr = splittetRom[2];
+            rom.RomNr = splittetRom[3];
+            rom.Kapasitet = splittetRom[4];
+            rom.Beskrivelse = splittetRom[5];
+            romliste.add(rom);
+        }
+        return romliste;
+    }
+}

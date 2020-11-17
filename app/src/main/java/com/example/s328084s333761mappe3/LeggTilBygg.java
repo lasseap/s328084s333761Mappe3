@@ -22,7 +22,7 @@ public class LeggTilBygg extends Activity {
         setContentView(R.layout.legg_til_bygg);
 
         koordinater = (TextView) findViewById(R.id.koordinaterInn);
-        adresse = (TextView ) findViewById(R.id.adresseInn);
+        adresse = (TextView) findViewById(R.id.adresseInn);
         beskrivelse = (EditText) findViewById(R.id.beskrivelseInn);
         antEtasjer = (EditText) findViewById(R.id.antEtasjerInn);
     }
