@@ -1,5 +1,6 @@
 package com.example.s328084s333761mappe3;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -8,25 +9,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
-
-public class LeggTilBygg extends AppCompatActivity {
+public class LeggTilBygg extends Activity {
     TextView koordinater;
     TextView adresse;
     EditText beskrivelse;
     EditText antEtasjer;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.legg_til_bygg);
 
-        koordinater = findViewById(R.id.koordinaterInn);
-        adresse = findViewById(R.id.adresseInn);
-        beskrivelse = findViewById(R.id.beskrivelseInn);
-        antEtasjer = findViewById(R.id.antEtasjerInn);
+        koordinater = (TextView) findViewById(R.id.koordinaterInn);
+        adresse = (TextView ) findViewById(R.id.adresseInn);
+        beskrivelse = (EditText) findViewById(R.id.beskrivelseInn);
+        antEtasjer = (EditText) findViewById(R.id.antEtasjerInn);
     }
 
     //Legger til ikon for lagre i actionbaren
