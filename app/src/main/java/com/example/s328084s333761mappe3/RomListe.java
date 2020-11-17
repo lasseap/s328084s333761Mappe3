@@ -58,11 +58,11 @@ public class RomListe extends AppCompatActivity {
         String bygg_adresse = i.getExtras().getString("byggUt");
         GetByggJSON taskBygg = new GetByggJSON();
         taskBygg.execute(new String[]{"http://student.cs.hioa.no/~s333761//jsonoutBygg.php/?Adresse="+ bygg_adresse});
-        ListView lv = (ListView) v.findViewById(R.id.liste);
-        TextView adresse = (TextView) v.findViewById(R.id.adresse);
-        TextView koordinater = (TextView) v.findViewById(R.id.koordinater);
-        TextView antEtasjer = (TextView) v.findViewById(R.id.antEtasjer);
-        TextView beskrivelse = (TextView) v.findViewById(R.id.beskrivelse);
+        ListView lv = (ListView) findViewById(R.id.liste);
+        TextView adresse = (TextView) findViewById(R.id.adresse);
+        TextView koordinater = (TextView) findViewById(R.id.koordinater);
+        TextView antEtasjer = (TextView) findViewById(R.id.antEtasjer);
+        TextView beskrivelse = (TextView) findViewById(R.id.beskrivelse);
         String jsonBygg = prefs.getString(getString(R.string.byggUt),"");
         String[] splittet = jsonBygg.split(";");
         bygg_id = splittet[0];
