@@ -1,6 +1,9 @@
 package com.example.s328084s333761mappe3;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,6 +16,7 @@ import java.net.URL;
 
 public class GetRomReservasjonJSON extends AsyncTask<String, Void,String> {
     JSONObject jsonObject;
+    SharedPreferences prefs;
 
     @Override
     protected String doInBackground(String... urls) {
@@ -63,5 +67,12 @@ public class GetRomReservasjonJSON extends AsyncTask<String, Void,String> {
             }
         }
         return retur;
+    }
+    protected void onPostExecute(String s) {
+        Context applicationContext = MapsActivity.getContextOfApplication();
+        prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(applicationContext.getString(R.string.reservasjonUt),s);
+        editor.apply();
     }
 }

@@ -2,6 +2,7 @@ package com.example.s328084s333761mappe3;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.LauncherActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -55,7 +56,7 @@ public class RomListe extends AppCompatActivity {
         setContentView(R.layout.romliste_layout);
 
         Intent i = this.getIntent();
-        String bygg_adresse = i.getExtras().getString("byggUt");
+        String bygg_adresse = i.getExtras().getString(getString(R.string.byggUt));
         GetByggJSON taskBygg = new GetByggJSON();
         taskBygg.execute(new String[]{"http://student.cs.hioa.no/~s333761//jsonoutBygg.php/?Adresse="+ bygg_adresse});
         ListView lv = (ListView) findViewById(R.id.liste);
@@ -83,7 +84,8 @@ public class RomListe extends AppCompatActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Rom data = adapter.getItem(i);
-                Intent reservasjonIntent = new Intent(); //Åpne romreservasjon her
+                Intent reservasjonIntent = new Intent(RomListe.this,RomReservasjonListe.class); //Åpne romreservasjon her
+                startActivity(reservasjonIntent);
             }
         });
     }
@@ -93,7 +95,7 @@ public class RomListe extends AppCompatActivity {
         ListView lv = (ListView) v.findViewById(R.id.liste);
         GetRomJSON task = new GetRomJSON();
         task.execute(new
-                String[]{"http://student.cs.hioa.no/~s333761//jsonoutRom.php/?Bygg_id="});
+                String[]{"http://student.cs.hioa.no/~s333761//jsonoutRom.php/?Bygg_id="+bygg_id});
         String romJson = prefs.getString(getString(R.string.romUt),"");
         ArrayList<Rom> rom = lagRomliste(romJson);
         final RomAdapter adapter = new RomAdapter(this,rom);
@@ -101,7 +103,8 @@ public class RomListe extends AppCompatActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Rom data = adapter.getItem(i);
-                //Åpne romreservasjon her
+                Intent reservasjonIntent = new Intent(RomListe.this,RomReservasjonListe.class); //Åpne romreservasjon her
+                startActivity(reservasjonIntent);
             }
         });
     }

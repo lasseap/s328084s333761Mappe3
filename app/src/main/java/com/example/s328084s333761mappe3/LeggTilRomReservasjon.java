@@ -1,5 +1,6 @@
 package com.example.s328084s333761mappe3;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -7,7 +8,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
@@ -17,6 +21,7 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
     TextView datoBoks;
     TextView fraTidBoks;
     TextView tilTidBoks;
+    String rom_id;
 
     // DBHandler db; Webdatabase
     String dato;
@@ -27,6 +32,9 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.legg_til_romreservasjon);
+
+        Intent i = this.getIntent();
+        rom_id = i.getExtras().getString(getString(R.string.romUt));
 
         setTitle(R.string.leggTilRomReservasjon);
 
@@ -93,15 +101,53 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /*
+
         if (item.getItemId() == R.id.leggTilAction) {
             //Når brukeren trykker på lagre-ikonet kjøres leggtil-funksjonen
             leggtil();
+            finish();
         } else {
             return super.onOptionsItemSelected(item);
         }
-        */
+
         return true;
+    }
+
+    public void leggtil() {
+
+        String dato = datoBoks.getText().toString();
+        String tilTid = tilTidBoks.getText().toString();
+        String fraTid = fraTidBoks.getText().toString();
+        String feilMelding = "";
+        Boolean utfylt = true;
+        //sjekker at alle felter er fylt ut korrekt
+        if (dato.equals("")) {
+            feilMelding += getString(R.string.feilDato);
+            utfylt = false;
+        }
+        if (tilTid.equals("") || fraTid.equals("")) {
+            if(!feilMelding.equals("")) {
+                feilMelding += ", ";
+            }
+            feilMelding += getString(R.string.feilTid);
+            utfylt = false;
+        }
+
+        if(utfylt){
+            jsonLeggTil(dato, fraTid, tilTid);
+        }
+        else {
+            feilMelding += " " + getString(R.string.ikkeFyltUtKorrekt);
+            Toast.makeText(getApplicationContext(),feilMelding, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void jsonLeggTil(String dato, String fra, String til) {
+        String json = "http://student.cs.hioa.no/~s333761//jsoninRomReservasjon.php/?Rom_id="+ rom_id + "&Dato=" + dato + "&TidFra="
+                + fra + "&TidTil=" + til;
+        SendJSON task = new SendJSON();
+        task.execute((new String[]{json}));
+
     }
 
 }

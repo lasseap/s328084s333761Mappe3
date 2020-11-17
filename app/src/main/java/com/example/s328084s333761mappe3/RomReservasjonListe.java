@@ -61,12 +61,12 @@ public class RomReservasjonListe extends AppCompatActivity {
         romNr = (TextView) findViewById(R.id.romNr);
         kapasitet = (TextView) findViewById(R.id.kapasitet);
         beskrivelse = (TextView) findViewById(R.id.beskrivelse);
-        String jsonBygg = prefs.getString(getString(R.string.byggUt),"");
-        String[] splittet = jsonBygg.split(";");
+        String jsonRom = prefs.getString(getString(R.string.romUt),"");
+        String[] splittet = jsonRom.split(";");
         rom_id = splittet[0];
         //Oppretter en liste med alle møte-objekter
 
-        GetRomJSON task = new GetRomJSON();
+        GetRomReservasjonJSON task = new GetRomReservasjonJSON();
         task.execute(new
                 String[]{"http://student.cs.hioa.no/~s333761//jsonoutRom.php/?Id="+rom_id});
         romNr.setText(splittet[3]);

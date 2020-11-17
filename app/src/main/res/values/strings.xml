@@ -14,7 +14,14 @@
     <string name="adresseInn">Skriv inn adresse</string>
     <string name="koordinaterInn">Skriv inn koordinatene til bygget</string>
     <string name="byggBeskrivelseInn">Skriv inn byggbeskrivelse</string>
-    <string name="ikkeFyltUtKorrekt">Du må fylle ut alle felter med riktig innhold</string>
+    <string name="ikkeFyltUtKorrekt">må fylles ut korrekt</string>
+    <string name="feilBeskrivelse">beskrivelse</string>
+    <string name="feilAntEtasjer">antall etasjer</string>
+    <string name="feilRomNr">romNr</string>
+    <string name="feilEtasjeNr">etasjeNr</string>
+    <string name="feilKapasitet">kapasitet</string>
+    <string name="feilDato">dato</string>
+    <string name="feilTid">tid</string>
     <string name="rom">Rom</string>
     <string name="reservasjoner">Reservasjoner</string>
     <string name="avslutt">Avslutt</string>

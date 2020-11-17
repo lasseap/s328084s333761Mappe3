@@ -8,11 +8,7 @@ import java.net.URL;
 
 public class SendJSON extends AsyncTask<String, Void,String> {
 
-    String json;
 
-    SendJSON(String json) {
-        this.json = json;
-    }
     @Override
     protected String doInBackground(String... urls) {
         String retur = "";

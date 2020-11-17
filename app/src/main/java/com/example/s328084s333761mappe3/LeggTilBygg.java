@@ -41,6 +41,7 @@ public class LeggTilBygg extends Activity {
         if (item.getItemId() == R.id.lagreAction) {
             //Når brukeren trykker på lagre-ikonet kjøres leggtil-funksjonen
             leggtil();
+            finish();
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -54,18 +55,54 @@ public class LeggTilBygg extends Activity {
         String beskrivelseTekst = beskrivelse.getText().toString();
         String koordinaterTekst = koordinater.getText().toString();
         String adresseTekst = adresse.getText().toString();
-        if(!(beskrivelseTekst.equals("")&&(antallEtasjer.equals("")))){
+        String feilMelding = "";
+        Boolean utfylt = true;
+        if(beskrivelseTekst.equals("")) {
+            feilMelding += getString(R.string.feilBeskrivelse);
+            utfylt = false;
+        }
+        if ((antallEtasjer.equals(""))) {
+            if(!feilMelding.equals("")) {
+                feilMelding += ", ";
+            }
+            feilMelding +=  getString(R.string.feilAntEtasjer);
+            utfylt = false;
+        }
+        else {
+            int antEtasjer;
+            try {
+                antEtasjer = Integer.parseInt(antallEtasjer);
+                if( antEtasjer< 21 && antEtasjer < 0) {
+                    if(!feilMelding.equals("")) {
+                        feilMelding += ", ";
+                    }
+                    feilMelding +=  getString(R.string.feilAntEtasjer);
+                    utfylt = false;
+                }
+            }
+            catch (Exception e) {
+                if(!feilMelding.equals("")) {
+                    feilMelding += ", ";
+                }
+                feilMelding +=  getString(R.string.feilAntEtasjer);
+                utfylt = false;
+            }
+
+        }
+        if(utfylt){
             jsonLeggTil(beskrivelseTekst,adresseTekst,koordinaterTekst,antallEtasjer);
         }
         else {
-            Toast.makeText(getApplicationContext(),R.string.ikkeFyltUtKorrekt, Toast.LENGTH_SHORT).show();
+            feilMelding += " " + getString(R.string.ikkeFyltUtKorrekt);
+            Toast.makeText(getApplicationContext(),feilMelding, Toast.LENGTH_SHORT).show();
         }
     }
 
     public void jsonLeggTil(String beskrivelse, String adresse, String koordinater, String antEtasjer) {
-        String json = "{Beskrivelse: " + beskrivelse + ", Adresse: " + adresse + ", Koordinater: "
-                + koordinater + ", AntEtasjer: " + antEtasjer + "}";
-        SendJSON task = new SendJSON(json);
+        String json = "http://student.cs.hioa.no/~s333761//jsoninBygg.php/?Beskrivelse=" + beskrivelse + "&Adresse=" + adresse + "&Koordinater="
+                + koordinater + "&AntEtasjer=" + antEtasjer;
+        SendJSON task = new SendJSON();
+        task.execute((new String[]{json}));
 
     }
 }

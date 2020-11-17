@@ -44,6 +44,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".RomListe" android:parentActivityName=".MapsActivity"></activity>
+        <activity android:name=".RomReservasjonListe" android:parentActivityName=".RomListe"></activity>
+        <activity android:name=".LeggTilBygg" android:parentActivityName=".MapsActivity"></activity>
+        <activity android:name=".LeggTilRom" android:parentActivityName=".RomListe"></activity>
+        <activity android:name=".LeggTilRomReservasjon" android:parentActivityName=".RomReservasjonListe"></activity>
     </application>
 
 </manifest>
