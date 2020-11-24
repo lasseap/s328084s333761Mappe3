@@ -4,7 +4,12 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,6 +18,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener {
 
@@ -60,18 +69,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapClick(LatLng point) {
         mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
-        MarkerOptions marker = new MarkerOptions().position(new LatLng(point.latitude, point.longitude)).title("New Marker");
-        mMap.addMarker(marker);
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(point.latitude, point.longitude, 1);
+            Log.d("TAG", addresses.get(0).getAddressLine(0));
+            String[] splittet = addresses.get(0).getAddressLine(0).split(",");
+            if(splittet.length < 3) {
+                Toast.makeText(getApplicationContext(),R.string.ikkeAdresse, Toast.LENGTH_SHORT).show();
+            }
+            else {
+                MarkerOptions marker = new MarkerOptions().position(new LatLng(point.latitude, point.longitude)).title(splittet[0]);
+                mMap.addMarker(marker);
+                Intent ileggtilbygg = new Intent(this, LeggTilBygg.class);
+                ileggtilbygg.putExtra(getString(R.string.adresse),splittet[0]);
+                String koordinater = point.latitude + "," + point.longitude;
+                ileggtilbygg.putExtra(getString(R.string.koordinater),koordinater);
+                startActivity(ileggtilbygg);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        visInfoDialog();
+        visInfoDialog(marker.getTitle());
         return false;
     }
 
-    public void visInfoDialog(){
-        DialogFragment dialog = new VisInfoDialogFragment();
+    public void visInfoDialog(String adresse){
+        DialogFragment dialog = new VisInfoDialogFragment(adresse);
         dialog.show(getSupportFragmentManager(),"VisInfoDialog");
     }
 

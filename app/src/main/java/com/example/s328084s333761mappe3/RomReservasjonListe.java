@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class RomReservasjonListe extends AppCompatActivity {
 
-    private String rom_id;
+    String rom_id;
     SharedPreferences prefs;
     TextView romNr;
     TextView etasjeNr;
@@ -55,7 +55,7 @@ public class RomReservasjonListe extends AppCompatActivity {
         Intent i = this.getIntent();
         String rom_id = i.getExtras().getString("romUt");
         GetRomJSON taskRom = new GetRomJSON();
-        taskRom.execute(new String[]{"http://student.cs.hioa.no/~s333761//jsonoutRom.php/?Id="+ rom_id});
+        taskRom.execute(new String[]{"http://student.cs.hioa.no/~s333761//jsonoutEttRom.php/?Id="+ rom_id});
         ListView lv = (ListView) findViewById(R.id.liste);
         etasjeNr = (TextView) findViewById(R.id.etasjeNr);
         romNr = (TextView) findViewById(R.id.romNr);
@@ -68,7 +68,7 @@ public class RomReservasjonListe extends AppCompatActivity {
 
         GetRomReservasjonJSON task = new GetRomReservasjonJSON();
         task.execute(new
-                String[]{"http://student.cs.hioa.no/~s333761//jsonoutRom.php/?Id="+rom_id});
+                String[]{"http://student.cs.hioa.no/~s333761//jsonoutEttRom.php/?Id="+rom_id});
         romNr.setText(splittet[3]);
         beskrivelse.setText(splittet[5]);
         kapasitet.setText(splittet[4]);

@@ -22,10 +22,13 @@
     <string name="feilKapasitet">kapasitet</string>
     <string name="feilDato">dato</string>
     <string name="feilTid">tid</string>
+    <string name="adresse">adresse</string>
+    <string name="koordinater">koordinater</string>
     <string name="rom">Rom</string>
     <string name="reservasjoner">Reservasjoner</string>
     <string name="avslutt">Avslutt</string>
     <string name="byggUt">ByggUt</string>
     <string name="romUt">RomUt</string>
     <string name="reservasjonUt">ReservasjonUt</string>
+    <string name="ikkeAdresse">Lokasjonen har ingen adresse</string>
 </resources>

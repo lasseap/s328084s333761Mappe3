@@ -1,7 +1,9 @@
 package com.example.s328084s333761mappe3;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -9,20 +11,31 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 
-public class LeggTilBygg extends Activity {
+
+public class LeggTilBygg extends AppCompatActivity {
     TextView koordinater;
     TextView adresse;
     EditText beskrivelse;
     EditText antEtasjer;
+    String adresseStreng;
+    String koordinaterStreng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.legg_til_bygg);
 
+        setTitle("Nytt bygg");
+
+        Intent i = this.getIntent();
+        adresseStreng = i.getExtras().getString(getString(R.string.adresse));
+        koordinaterStreng = i.getExtras().getString(getString(R.string.koordinater));
         koordinater = (TextView) findViewById(R.id.koordinaterInn);
         adresse = (TextView) findViewById(R.id.adresseInn);
+        adresse.setText(adresseStreng);
+        koordinater.setText(koordinaterStreng);
         beskrivelse = (EditText) findViewById(R.id.beskrivelseInn);
         antEtasjer = (EditText) findViewById(R.id.antEtasjerInn);
     }
@@ -37,7 +50,6 @@ public class LeggTilBygg extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         if (item.getItemId() == R.id.lagreAction) {
             //Når brukeren trykker på lagre-ikonet kjøres leggtil-funksjonen
             leggtil();
@@ -53,8 +65,6 @@ public class LeggTilBygg extends Activity {
 
         String antallEtasjer = antEtasjer.getText().toString();
         String beskrivelseTekst = beskrivelse.getText().toString();
-        String koordinaterTekst = koordinater.getText().toString();
-        String adresseTekst = adresse.getText().toString();
         String feilMelding = "";
         Boolean utfylt = true;
         if(beskrivelseTekst.equals("")) {
@@ -90,7 +100,7 @@ public class LeggTilBygg extends Activity {
 
         }
         if(utfylt){
-            jsonLeggTil(beskrivelseTekst,adresseTekst,koordinaterTekst,antallEtasjer);
+            jsonLeggTil(beskrivelseTekst,adresseStreng,koordinaterStreng,antallEtasjer);
         }
         else {
             feilMelding += " " + getString(R.string.ikkeFyltUtKorrekt);
@@ -99,8 +109,14 @@ public class LeggTilBygg extends Activity {
     }
 
     public void jsonLeggTil(String beskrivelse, String adresse, String koordinater, String antEtasjer) {
-        String json = "http://student.cs.hioa.no/~s333761//jsoninBygg.php/?Beskrivelse=" + beskrivelse + "&Adresse=" + adresse + "&Koordinater="
+        String[] splittet = adresse.split("\\s+");
+        String formatertAdresse = splittet[0];
+        for (int i = 1; i < splittet.length; i++) {
+            formatertAdresse += "%20" + splittet[i];
+        }
+        String json = "http://student.cs.hioa.no/~s333761/jsoninBygg.php/?Beskrivelse=" + beskrivelse + "&Adresse=" + formatertAdresse + "&Koordinater="
                 + koordinater + "&AntEtasjer=" + antEtasjer;
+        Log.d("TAG", json);
         SendJSON task = new SendJSON();
         task.execute((new String[]{json}));
 
