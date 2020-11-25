@@ -114,7 +114,12 @@ public class LeggTilBygg extends AppCompatActivity {
         for (int i = 1; i < splittet.length; i++) {
             formatertAdresse += "%20" + splittet[i];
         }
-        String json = "http://student.cs.hioa.no/~s333761/jsoninBygg.php/?Beskrivelse=" + beskrivelse + "&Adresse=" + formatertAdresse + "&Koordinater="
+        String[] splittetBeskrivelse = beskrivelse.split("\\s+");
+        String formatertBeskrivelse = splittetBeskrivelse[0];
+        for (int i = 1; i < splittetBeskrivelse.length; i++) {
+            formatertBeskrivelse += "%20" + splittetBeskrivelse[i];
+        }
+        String json = "http://student.cs.hioa.no/~s333761/jsoninBygg.php/?Beskrivelse=" + formatertBeskrivelse + "&Adresse=" + formatertAdresse + "&Koordinater="
                 + koordinater + "&AntEtasjer=" + antEtasjer;
         Log.d("TAG", json);
         SendJSON task = new SendJSON();

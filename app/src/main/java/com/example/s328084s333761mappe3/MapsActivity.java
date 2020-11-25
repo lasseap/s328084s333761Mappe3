@@ -5,9 +5,11 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,6 +29,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public GoogleMap mMap;
     public static Context contextOfApplication;
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         mapFragment.getMapAsync(this);
         contextOfApplication = getApplicationContext();
     }
@@ -62,6 +66,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(pilestredet));
         moveToCurrentLocation(pilestredet);
 
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        int antall = prefs.getInt(getString(R.string.antallMarkers), 0);
+        for (int i = 0;i < antall;i++) {
+            int ant = i + 1;
+            String koordinater = prefs.getString("" + ant, "noe gikk galt");
+            String[] splittet = koordinater.split(",");
+            double latitude = Double.parseDouble(splittet[0]);
+            double longitude = Double.parseDouble(splittet[1]);
+            try {
+                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                Log.d("TAG", addresses.get(0).getAddressLine(0));
+                String[] splittetAdresse = addresses.get(0).getAddressLine(0).split(",");
+                LatLng koord = new LatLng(latitude, longitude);
+                mMap.addMarker(new MarkerOptions().position(koord).title(splittetAdresse[0]));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
         mMap.setOnMapClickListener(this);
         mMap.setOnMarkerClickListener(this);
     }
@@ -79,11 +104,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             else {
                 MarkerOptions marker = new MarkerOptions().position(new LatLng(point.latitude, point.longitude)).title(splittet[0]);
+                int antall = prefs.getInt(getString(R.string.antallMarkers), 0);
                 mMap.addMarker(marker);
                 Intent ileggtilbygg = new Intent(this, LeggTilBygg.class);
                 ileggtilbygg.putExtra(getString(R.string.adresse),splittet[0]);
                 String koordinater = point.latitude + "," + point.longitude;
                 ileggtilbygg.putExtra(getString(R.string.koordinater),koordinater);
+                antall++;
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString(""+antall,koordinater);
+                editor.putInt(getString(R.string.antallMarkers),antall);
+                editor.apply();
                 startActivity(ileggtilbygg);
             }
 

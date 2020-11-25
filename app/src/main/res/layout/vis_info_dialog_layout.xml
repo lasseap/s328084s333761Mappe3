@@ -5,34 +5,34 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/byggInfo"
+        android:id="@+id/adresse"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sett inn bygg her" />
 
     <TextView
-        android:id="@+id/romInfo"
+        android:id="@+id/koordinater"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/rom" />
+    <TextView
+    android:id="@+id/antEtasjer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/reservasjoner" />
+
+    <TextView
+        android:id="@+id/beskrivelse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
 
     <Button
         android:id="@+id/leggTilRomKnapp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/leggTilRom" />
+        android:text="@string/visRom" />
 
-    <TextView
-        android:id="@+id/reservasjonInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/reservasjoner" />
-
-    <Button
-        android:id="@+id/leggTilReservasjonKnapp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/leggTilRomReservasjon" />
 
     <Button
         android:id="@+id/avsluttKnapp"

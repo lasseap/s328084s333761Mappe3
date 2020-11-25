@@ -6,7 +6,10 @@ import android.app.LauncherActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,13 +23,25 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class RomListe extends AppCompatActivity {
 
     private String bygg_id;
-    SharedPreferences prefs;
+    String adresseText;
+    String antEtasjerText;
+    TextView adresse;
+    TextView antEtasjer;
     public View v;
+    //Context applicationContext = MapsActivity.getContextOfApplication();
 
     public RomListe() {}
 
@@ -56,57 +71,40 @@ public class RomListe extends AppCompatActivity {
         setContentView(R.layout.romliste_layout);
 
         Intent i = this.getIntent();
-        String bygg_adresse = i.getExtras().getString(getString(R.string.byggUt));
+        adresseText = i.getExtras().getString(getString(R.string.byggUt));
+        antEtasjerText = i.getExtras().getString(getString(R.string.bygg_etasjer));
+        bygg_id = i.getExtras().getString(getString(R.string.bygg_id));
+        /*String[] splittet = bygg_adresse.split("\\s+");
+        String formatertAdresse = splittet[0];
+        for (int j = 1; j < splittet.length; j++) {
+            formatertAdresse += "%20" + splittet[j];
+        }
         GetByggJSON taskBygg = new GetByggJSON();
-        taskBygg.execute(new String[]{"http://student.cs.hioa.no/~s333761//jsonoutBygg.php/?Adresse="+ bygg_adresse});
-        ListView lv = (ListView) findViewById(R.id.liste);
-        TextView adresse = (TextView) findViewById(R.id.adresse);
-        TextView koordinater = (TextView) findViewById(R.id.koordinater);
-        TextView antEtasjer = (TextView) findViewById(R.id.antEtasjer);
-        TextView beskrivelse = (TextView) findViewById(R.id.beskrivelse);
-        String jsonBygg = prefs.getString(getString(R.string.byggUt),"");
-        String[] splittet = jsonBygg.split(";");
-        bygg_id = splittet[0];
-        //Oppretter en liste med alle møte-objekter
+        taskBygg.execute(new String[]{"http://student.cs.hioa.no/~s333761//jsonoutBygg.php/?Adresse="+ formatertAdresse});
+
+         */
+
+        adresse = (TextView) findViewById(R.id.adresse);
+        antEtasjer = (TextView) findViewById(R.id.antEtasjer);
+        adresse.setText(adresseText);
+        antEtasjer.setText(antEtasjerText);
+        //Oppretter en liste med alle rom-objekter
 
         GetRomJSON task = new GetRomJSON();
+        String json = "http://student.cs.hioa.no/~s333761//jsonoutRom.php/?Bygg_id="+bygg_id;
+        Log.d("TAG", json);
         task.execute(new
-                String[]{"http://student.cs.hioa.no/~s333761//jsonoutRom.php/?Bygg_id="+bygg_id});
-        adresse.setText(splittet[2]);
-        beskrivelse.setText(splittet[1]);
-        koordinater.setText(splittet[3]);
-        antEtasjer.setText(splittet[4]);
-        String romJson = prefs.getString(getString(R.string.romUt),"");
-        ArrayList<Rom> rom = lagRomliste(romJson);
-        final RomAdapter adapter = new RomAdapter(this,rom);
-        lv.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Rom data = adapter.getItem(i);
-                Intent reservasjonIntent = new Intent(RomListe.this,RomReservasjonListe.class); //Åpne romreservasjon her
-                startActivity(reservasjonIntent);
-            }
-        });
+                String[]{json});
+
     }
 
     //Oppdaterer listefragmenetet
     public void oppdater() {
-        ListView lv = (ListView) v.findViewById(R.id.liste);
         GetRomJSON task = new GetRomJSON();
+        String json = "http://student.cs.hioa.no/~s333761//jsonoutRom.php/?Bygg_id="+bygg_id;
+        Log.d("TAG", json);
         task.execute(new
-                String[]{"http://student.cs.hioa.no/~s333761//jsonoutRom.php/?Bygg_id="+bygg_id});
-        String romJson = prefs.getString(getString(R.string.romUt),"");
-        ArrayList<Rom> rom = lagRomliste(romJson);
-        final RomAdapter adapter = new RomAdapter(this,rom);
-        lv.setAdapter(adapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Rom data = adapter.getItem(i);
-                Intent reservasjonIntent = new Intent(RomListe.this,RomReservasjonListe.class); //Åpne romreservasjon her
-                startActivity(reservasjonIntent);
-            }
-        });
+                String[]{json});
     }
 
 
@@ -131,5 +129,86 @@ public class RomListe extends AppCompatActivity {
             romliste.add(rom);
         }
         return romliste;
+    }
+
+
+
+    private class GetRomJSON extends AsyncTask<String, Void,String> {
+        JSONObject jsonObject;
+        SharedPreferences prefs;
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String retur = "";
+            String s = "";
+            String output = "";
+            for (String url : urls) {
+                try {
+                    URL urlen = new URL(urls[0]);
+                    HttpURLConnection conn = (HttpURLConnection)
+                            urlen.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Accept",
+                            "application/json");
+                    if (conn.getResponseCode() != 200) {
+                        throw new RuntimeException("Failed : HTTP error code : "
+                                + conn.getResponseCode());
+                    }
+                    BufferedReader br = new BufferedReader(new InputStreamReader(
+                            (conn.getInputStream())));
+                    System.out.println("Output from Server .... \n");
+                    while ((s = br.readLine()) != null) {
+                        output = output + s;
+                    }
+                    conn.disconnect();
+                    try {
+                        JSONArray mat = new JSONArray(output);
+                        for (int i = 0; i < mat.length(); i++) {
+                            JSONObject jsonobject = mat.getJSONObject(i);
+                            String id = jsonobject.getString("id");
+                            String bygg_id = jsonobject.getString("Bygg_id");
+                            String etasjeNr = jsonobject.getString("EtasjeNr");
+                            String romNr = jsonobject.getString("RomNr");
+                            String kapasitet = jsonobject.getString("Kapasitet");
+                            String beskrivelse = jsonobject.getString("Beskrivelse");
+                            retur = retur + id + ";" + bygg_id + ";" + etasjeNr + ";" + romNr + ";" + kapasitet + ";" + beskrivelse;
+                            if(!(i == mat.length()-1)) {
+                                retur += ":";
+                            }
+                        }
+                        return retur;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    return retur;
+                } catch (Exception e) {
+                    return "Noe gikk feil";
+                }
+            }
+            return retur;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            ListView lv = (ListView) findViewById(R.id.liste);
+            Log.d("TAG","I post rom "+ s);
+            if(!s.equals("")) {
+                ArrayList<Rom> rom = lagRomliste(s);
+                final RomAdapter adapter = new RomAdapter(RomListe.this,rom);
+                lv.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        Rom data = adapter.getItem(i);
+                        Intent reservasjonIntent = new Intent(RomListe.this,RomReservasjonListe.class); //Åpne romreservasjon her
+                        reservasjonIntent.putExtra(getString(R.string.romUt),data.Id);
+                        startActivity(reservasjonIntent);
+                    }
+                });
+            }
+
+
+
+        }
     }
 }

@@ -31,4 +31,8 @@
     <string name="romUt">RomUt</string>
     <string name="reservasjonUt">ReservasjonUt</string>
     <string name="ikkeAdresse">Lokasjonen har ingen adresse</string>
+    <string name="visRom">Vis rom</string>
+    <string name="bygg_id">bygg_id</string>
+    <string name="bygg_etasjer">bygg_etasjer</string>
+    <string name="antallMarkers">antallMarkers</string>
 </resources>

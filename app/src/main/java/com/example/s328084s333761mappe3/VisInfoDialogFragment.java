@@ -1,14 +1,10 @@
 package com.example.s328084s333761mappe3;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,13 +26,15 @@ import java.net.URL;
 
 public class VisInfoDialogFragment extends DialogFragment {
 
-    TextView byggInfo;
-    TextView romInfo;
-    TextView reservasjonInfo;
+    TextView adresseBox;
+    TextView koordinaterBox;
+    TextView etasjeBox;
+    TextView beskrivelseBox;
     Button visRomKnapp;
-    Button leggTilReservasjonKnapp;
     Button avsluttKnapp;
     String adresse;
+    String Id;
+    String antEtasjer;
     SharedPreferences prefs;
 /*
     private DialogClickListener callback;
@@ -74,7 +72,10 @@ public class VisInfoDialogFragment extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Get field from view
-        byggInfo = (TextView) view.findViewById(R.id.byggInfo);
+        adresseBox = (TextView) view.findViewById(R.id.adresse);
+        koordinaterBox = (TextView) view.findViewById(R.id.koordinater);
+        etasjeBox = (TextView) view.findViewById(R.id.antEtasjer);
+        beskrivelseBox = (TextView) view.findViewById(R.id.beskrivelse);
         GetByggJSON bygg = new GetByggJSON();
         String[] splittet = adresse.split("\\s+");
         String formatertAdresse = splittet[0];
@@ -85,11 +86,9 @@ public class VisInfoDialogFragment extends DialogFragment {
                 String[]{"http://student.cs.hioa.no/~s333761/JSONoutBygg.php/?Adresse="+formatertAdresse});
         Context applicationContext = MapsActivity.getContextOfApplication();
 
-        romInfo = (TextView) view.findViewById(R.id.romInfo);
-        reservasjonInfo = (TextView) view.findViewById(R.id.reservasjonInfo);
+
         avsluttKnapp = (Button) view.findViewById(R.id.avsluttKnapp);
         visRomKnapp = (Button) view.findViewById(R.id.leggTilRomKnapp);
-        leggTilReservasjonKnapp = (Button) view.findViewById(R.id.leggTilReservasjonKnapp);
 
         avsluttKnapp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,8 +100,10 @@ public class VisInfoDialogFragment extends DialogFragment {
         visRomKnapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent ivisrom = new Intent(getParentFragment().getContext(), RomListe.class);
-                ivisrom.putExtra(getString(R.string.byggUt),byggInfo.getText());
+                Intent ivisrom = new Intent(getActivity(), RomListe.class);
+                ivisrom.putExtra(getString(R.string.byggUt), adresseBox.getText());
+                ivisrom.putExtra(getString(R.string.bygg_id),Id);
+                ivisrom.putExtra(getString(R.string.bygg_etasjer),antEtasjer);
                 startActivity(ivisrom);
             }
         });
@@ -181,7 +182,13 @@ public class VisInfoDialogFragment extends DialogFragment {
         @Override
         protected void onPostExecute(String s) {
             Log.d("TAG",s);
-            byggInfo.setText(s);
+            String[] splittet = s.split(";");
+            adresseBox.setText(splittet[2]);
+            koordinaterBox.setText(splittet[3]);
+            etasjeBox.setText(splittet[4]);
+            antEtasjer = splittet[4];
+            beskrivelseBox.setText(splittet[1]);
+            Id = splittet[0];
         }
     }
 

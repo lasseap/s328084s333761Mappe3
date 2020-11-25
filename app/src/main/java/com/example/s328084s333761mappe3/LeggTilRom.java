@@ -139,8 +139,13 @@ public class LeggTilRom extends AppCompatActivity {
     }
 
     public void jsonLeggTil(String beskrivelse, String romNr, String kapasitet, String etasjeNr) {
+        String[] splittetBeskrivelse = beskrivelse.split("\\s+");
+        String formatertBeskrivelse = splittetBeskrivelse[0];
+        for (int i = 1; i < splittetBeskrivelse.length; i++) {
+            formatertBeskrivelse += "%20" + splittetBeskrivelse[i];
+        }
         String json = "http://student.cs.hioa.no/~s333761//jsoninRom.php/?Bygg_id="+bygg_Id + "&EtasjeNr=" + etasjeNr + "&RomNr="
-                + romNr + "&Kapasitet=" + kapasitet + "&Beskrivelse=" + beskrivelse;
+                + romNr + "&Kapasitet=" + kapasitet + "&Beskrivelse=" + formatertBeskrivelse;
         SendJSON task = new SendJSON();
         task.execute((new String[]{json}));
 
