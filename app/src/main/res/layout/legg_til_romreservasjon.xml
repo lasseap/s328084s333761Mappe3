@@ -27,7 +27,7 @@
                 app:tint="#000000" />
 
             <TextView
-                android:id="@+id/typeinn"
+                android:id="@+id/romNrBoks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -58,8 +58,8 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@null"
+            android:onClick="visTidspunktFra"
             android:scaleType="fitCenter"
-            android:onClick="visTidspunkt"
             android:src="@android:drawable/ic_menu_recent_history"
             android:tint="@color/black" />
 

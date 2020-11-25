@@ -69,6 +69,7 @@ public class RomListe extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.romliste_layout);
+        setTitle(R.string.rom);
 
         Intent i = this.getIntent();
         adresseText = i.getExtras().getString(getString(R.string.byggUt));
@@ -202,6 +203,10 @@ public class RomListe extends AppCompatActivity {
                         Rom data = adapter.getItem(i);
                         Intent reservasjonIntent = new Intent(RomListe.this,RomReservasjonListe.class); //Åpne romreservasjon her
                         reservasjonIntent.putExtra(getString(R.string.romUt),data.Id);
+                        reservasjonIntent.putExtra(getString(R.string.romEtasje),data.EtasjeNr);
+                        reservasjonIntent.putExtra(getString(R.string.romBeskrivelse),data.Beskrivelse);
+                        reservasjonIntent.putExtra(getString(R.string.romNr),data.RomNr);
+                        reservasjonIntent.putExtra(getString(R.string.romKapasitet),data.Kapasitet);
                         startActivity(reservasjonIntent);
                     }
                 });

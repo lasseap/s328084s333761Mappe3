@@ -22,6 +22,8 @@ public class LeggTilRom extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.legg_til_rom);
+        setTitle(R.string.leggTilRom);
+
         Intent i = this.getIntent();
         bygg_Id = i.getExtras().getString(getString(R.string.byggUt));
         romNr = findViewById(R.id.romNrinn);

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,16 +17,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
-public class LeggTilRomReservasjon extends AppCompatActivity implements DatePickerFragment.OnDialogDismissListener, TimePickerFragment.OnDialogDismissListener {
+public class LeggTilRomReservasjon extends AppCompatActivity implements DatePickerFragment.OnDialogDismissListener, TimePickerFragment.OnDialogDismissListener, TimePickerFraFragment.OnDialogDismissListener {
 
     TextView datoBoks;
     TextView fraTidBoks;
     TextView tilTidBoks;
-    String rom_id;
+    int rom_id;
+    String romNr;
+    TextView romNrBox;
 
-    // DBHandler db; Webdatabase
-    String dato;
-    String tid;
     SharedPreferences prefs;
 
     @Override
@@ -34,7 +34,8 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
         setContentView(R.layout.legg_til_romreservasjon);
 
         Intent i = this.getIntent();
-        rom_id = i.getExtras().getString(getString(R.string.romUt));
+        rom_id = i.getExtras().getInt(getString(R.string.romUt));
+        romNr = i.getExtras().getString(getString(R.string.romNr));
 
         setTitle(R.string.leggTilRomReservasjon);
 
@@ -42,6 +43,8 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
         datoBoks = findViewById(R.id.datoBoks);
         fraTidBoks = findViewById(R.id.fraTidBoks);
         tilTidBoks = findViewById(R.id.tilTidBoks);
+        romNrBox = findViewById(R.id.romNrBoks);
+        romNrBox.setText(romNr);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
     }
@@ -50,6 +53,12 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
     public void visTidspunkt(View v) {
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getSupportFragmentManager(), "timePicker");
+    }
+
+    //Åpner TimePicker-fragmentet
+    public void visTidspunktFra(View v) {
+        DialogFragment newFragment = new TimePickerFraFragment();
+        newFragment.show(getSupportFragmentManager(), "timeFraPicker");
     }
 
     //Åpner DatePicker-fragmentet
@@ -62,10 +71,22 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
     public void onDialogDismissListener() {
         //Henter inn tid og dato fra SharedPreferences
         String tidspunkt = prefs.getString(getString(R.string.velgTidspunkt),"");
+        String tidspunktFra = prefs.getString(getString(R.string.tidspunktFra),"");
         String datoboks = prefs.getString(getString(R.string.velgDato),"");
         if(!tidspunkt.equals("")) {
             //Formaterer tid på formen mm:tt
             String[] splittetTid = tidspunkt.split(":");
+            if (Integer.parseInt(splittetTid[0]) < 10 && Integer.parseInt(splittetTid[1]) < 10) {
+                tidspunkt = "0" + splittetTid[0] + ":0" + splittetTid[1];
+            } else if (Integer.parseInt(splittetTid[0]) < 10) {
+                tidspunkt = "0" + splittetTid[0] + ":" + splittetTid[1];
+            } else if (Integer.parseInt(splittetTid[1]) < 10) {
+                tidspunkt = splittetTid[0] + ":0" + splittetTid[1];
+            }
+        }
+        if(!tidspunktFra.equals("")) {
+            //Formaterer tid på formen mm:tt
+            String[] splittetTid = tidspunktFra.split(":");
             if (Integer.parseInt(splittetTid[0]) < 10 && Integer.parseInt(splittetTid[1]) < 10) {
                 tidspunkt = "0" + splittetTid[0] + ":0" + splittetTid[1];
             } else if (Integer.parseInt(splittetTid[0]) < 10) {
@@ -86,7 +107,7 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
             }
         }
         //Legger inn valgt tid og dato i TextViews
-        fraTidBoks.setText(tidspunkt);
+        fraTidBoks.setText(tidspunktFra);
         tilTidBoks.setText(tidspunkt);
         datoBoks.setText(datoboks);
     }
@@ -102,7 +123,7 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.leggTilAction) {
+        if (item.getItemId() == R.id.lagreAction) {
             //Når brukeren trykker på lagre-ikonet kjøres leggtil-funksjonen
             leggtil();
             finish();
@@ -145,9 +166,22 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
     public void jsonLeggTil(String dato, String fra, String til) {
         String json = "http://student.cs.hioa.no/~s333761//jsoninRomReservasjon.php/?Rom_id="+ rom_id + "&Dato=" + dato + "&TidFra="
                 + fra + "&TidTil=" + til;
+        Log.d("TAG", json);
         SendJSON task = new SendJSON();
         task.execute((new String[]{json}));
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        //Når brukeren går ut av endresiden skal velgDato- og velgTidspunkt-variablene nullstilles
+        //slik at disse ikke blir satt når en bruker skal endre et annet møte
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(getString(R.string.velgDato),"");
+        editor.putString(getString(R.string.velgTidspunkt),"");
+        editor.putString(getString(R.string.tidspunktFra),"");
+        editor.apply();
+        super.onDestroy();
     }
 
 }

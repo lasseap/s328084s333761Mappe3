@@ -35,4 +35,13 @@
     <string name="bygg_id">bygg_id</string>
     <string name="bygg_etasjer">bygg_etasjer</string>
     <string name="antallMarkers">antallMarkers</string>
+    <string name="romNr">romNr</string>
+    <string name="romKapasitet">romKapasitet</string>
+    <string name="romEtasje">romEtasje</string>
+    <string name="romBeskrivelse">rombeskrivelse</string>
+    <string name="tidspunktFra">tidspunktFra</string>
+    <string name="etasjeNr">Etasje Nr: </string>
+    <string name="RomNr">Rom Nr: </string>
+    <string name="kapasitet">Kapasitet: </string>
+    <string name="antall_etasjer">Etasjer: </string>
 </resources>

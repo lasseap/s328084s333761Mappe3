@@ -182,13 +182,19 @@ public class VisInfoDialogFragment extends DialogFragment {
         @Override
         protected void onPostExecute(String s) {
             Log.d("TAG",s);
-            String[] splittet = s.split(";");
-            adresseBox.setText(splittet[2]);
-            koordinaterBox.setText(splittet[3]);
-            etasjeBox.setText(splittet[4]);
-            antEtasjer = splittet[4];
-            beskrivelseBox.setText(splittet[1]);
-            Id = splittet[0];
+            if(s.equals("")) {
+                adresseBox.setText("klarte ikke hente fra server");
+            }
+            else {
+                String[] splittet = s.split(";");
+                adresseBox.setText(splittet[2]);
+                koordinaterBox.setText(splittet[3]);
+                etasjeBox.setText(splittet[4]);
+                antEtasjer = splittet[4];
+                beskrivelseBox.setText(splittet[1]);
+                Id = splittet[0];
+            }
+
         }
     }
 

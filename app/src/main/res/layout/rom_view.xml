@@ -22,20 +22,23 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp">
 
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="25dp"
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
 
-                app:srcCompat="@android:drawable/ic_menu_info_details"
-                app:tint="#000000" />
+                android:text="@string/RomNr"
+                android:textColor="@color/black"
+                android:textSize="20sp"/>
+
+
 
             <TextView
                 android:id="@+id/romNrView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
 
                 android:text="TextView"
                 android:textColor="@color/black"
@@ -49,18 +52,23 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp">
 
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="wrap_content"
-                android:layout_height="25dp"
-                app:srcCompat="@android:drawable/ic_menu_mylocation"
-                app:tint="#000000" />
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+
+                android:text="@string/etasjeNr"
+                android:textColor="@color/black"
+                android:textSize="20sp"/>
+
+
 
             <TextView
                 android:id="@+id/etasjeNrView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView"
+                android:paddingLeft="10dp"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
@@ -69,25 +77,28 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="horizontal"
-            android:paddingLeft="10dp">
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
-                android:layout_height="25dp"
 
-                app:srcCompat="@android:drawable/ic_menu_recent_history"
-                app:tint="#000000" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+
+                android:text="@string/kapasitet"
+                android:textColor="@color/black"
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/kapasitetView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
 
-                android:paddingRight="10dp"
+
+                android:paddingLeft="10dp"
 
                 android:text="TextView"
                 android:textColor="@color/black"

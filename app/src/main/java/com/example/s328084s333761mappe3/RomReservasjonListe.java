@@ -1,8 +1,12 @@
 package com.example.s328084s333761mappe3;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,11 +18,24 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class RomReservasjonListe extends AppCompatActivity {
 
-    String rom_id;
+    int rom_id;
+    String etasjeNrText;
+    String kapasitetText;
+    String beskrivelseText;
+    String romNrText;
+
     SharedPreferences prefs;
     TextView romNr;
     TextView etasjeNr;
@@ -39,6 +56,7 @@ public class RomReservasjonListe extends AppCompatActivity {
             //Når brukeren trykker på pluss-ikonet sendes bruker til LeggTilRomREservasjon-aktivitet
             Intent leggTilIntent = new Intent(this,LeggTilRomReservasjon.class);
             leggTilIntent.putExtra(getString(R.string.romUt),rom_id);
+            leggTilIntent.putExtra(getString(R.string.romNr),romNrText);
             startActivity(leggTilIntent);
         } else {
             return super.onOptionsItemSelected(item);
@@ -52,44 +70,41 @@ public class RomReservasjonListe extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reservasjonliste_layout);
 
+        setTitle(R.string.reservasjoner);
+
         Intent i = this.getIntent();
-        String rom_id = i.getExtras().getString("romUt");
-        GetRomJSON taskRom = new GetRomJSON();
-        taskRom.execute(new String[]{"http://student.cs.hioa.no/~s333761//jsonoutEttRom.php/?Id="+ rom_id});
-        ListView lv = (ListView) findViewById(R.id.liste);
+        rom_id = i.getExtras().getInt(getString(R.string.romUt));
+        romNrText = i.getExtras().getString(getString(R.string.romNr));
+        kapasitetText = i.getExtras().getString(getString(R.string.romKapasitet));
+        beskrivelseText = i.getExtras().getString(getString(R.string.romBeskrivelse));
+        etasjeNrText = i.getExtras().getString(getString(R.string.romEtasje));
+
+
         etasjeNr = (TextView) findViewById(R.id.etasjeNr);
         romNr = (TextView) findViewById(R.id.romNr);
         kapasitet = (TextView) findViewById(R.id.kapasitet);
         beskrivelse = (TextView) findViewById(R.id.beskrivelse);
-        String jsonRom = prefs.getString(getString(R.string.romUt),"");
-        String[] splittet = jsonRom.split(";");
-        rom_id = splittet[0];
+
         //Oppretter en liste med alle møte-objekter
 
         GetRomReservasjonJSON task = new GetRomReservasjonJSON();
         task.execute(new
-                String[]{"http://student.cs.hioa.no/~s333761//jsonoutEttRom.php/?Id="+rom_id});
-        romNr.setText(splittet[3]);
-        beskrivelse.setText(splittet[5]);
-        kapasitet.setText(splittet[4]);
-        etasjeNr.setText(splittet[2]);
-        String romJson = prefs.getString(getString(R.string.reservasjonUt),"");
-        ArrayList<RomReservasjon> resevasjoner = lagRomReservasjonliste(romJson);
-        final ReservasjonAdapter adapter = new ReservasjonAdapter(this,resevasjoner);
-        lv.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+                String[]{"http://student.cs.hioa.no/~s333761//jsonoutRomReservasjon.php/?Rom_id="+rom_id});
+        romNr.setText(romNrText);
+        beskrivelse.setText(beskrivelseText);
+        kapasitet.setText(kapasitetText);
+        etasjeNr.setText(etasjeNrText);
+
     }
 
     //Oppdaterer listefragmenetet
     public void oppdater() {
-        ListView lv = (ListView) findViewById(R.id.liste);
-        GetRomJSON task = new GetRomJSON();
+        Log.d("TAG", "oppdaterer res");
+
+        GetRomReservasjonJSON task = new GetRomReservasjonJSON();
         task.execute(new
-                String[]{"http://student.cs.hioa.no/~s333761//jsonoutRom.php/?Bygg_id="});
-        String romJson = prefs.getString(getString(R.string.romUt),"");
-        ArrayList<RomReservasjon> resevasjoner = lagRomReservasjonliste(romJson);
-        final ReservasjonAdapter adapter = new ReservasjonAdapter(this,resevasjoner);
-        lv.setAdapter(adapter);
+                String[]{"http://student.cs.hioa.no/~s333761//jsonoutRomReservasjon.php/?Rom_id="+rom_id});
+
 
     }
 
@@ -101,7 +116,7 @@ public class RomReservasjonListe extends AppCompatActivity {
     }
 
     public ArrayList<RomReservasjon> lagRomReservasjonliste(String romJson) {
-        String[] splittet = romJson.split(":");
+        String[] splittet = romJson.split("_");
         ArrayList<RomReservasjon> reservasjonliste = new ArrayList<>();
         for (String string : splittet) {
             String[] splittetRom = string.split(";");
@@ -114,5 +129,70 @@ public class RomReservasjonListe extends AppCompatActivity {
             reservasjonliste.add(reservasjon);
         }
         return reservasjonliste;
+    }
+
+    private class GetRomReservasjonJSON extends AsyncTask<String, Void,String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String retur = "";
+            String s = "";
+            String output = "";
+            for (String url : urls) {
+                try {
+                    URL urlen = new URL(urls[0]);
+                    HttpURLConnection conn = (HttpURLConnection)
+                            urlen.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Accept",
+                            "application/json");
+                    if (conn.getResponseCode() != 200) {
+                        throw new RuntimeException("Failed : HTTP error code : "
+                                + conn.getResponseCode());
+                    }
+                    BufferedReader br = new BufferedReader(new InputStreamReader(
+                            (conn.getInputStream())));
+                    System.out.println("Output from Server .... \n");
+                    while ((s = br.readLine()) != null) {
+                        output = output + s;
+                    }
+                    conn.disconnect();
+                    try {
+                        JSONArray mat = new JSONArray(output);
+                        for (int i = 0; i < mat.length(); i++) {
+                            JSONObject jsonobject = mat.getJSONObject(i);
+                            String id = jsonobject.getString("id");
+                            String rom_id = jsonobject.getString("Rom_id");
+                            String dato = jsonobject.getString("Dato");
+                            String tidFra = jsonobject.getString("TidFra");
+                            String tidTil = jsonobject.getString("TidTil");
+
+                            retur = retur + id + ";" + rom_id + ";" + dato + ";" + tidFra + ";" + tidTil;
+                            if(!(i == mat.length()-1)) {
+                                retur += "_";
+                            }
+                        }
+                        return retur;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    return retur;
+                } catch (Exception e) {
+                    return "Noe gikk feil";
+                }
+            }
+            return retur;
+        }
+        protected void onPostExecute(String s) {
+            Log.d("TAG","I post reservasjon: "+s);
+            ListView lv = (ListView) findViewById(R.id.liste);
+            if(!s.equals("")) {
+                ArrayList<RomReservasjon> resevasjoner = lagRomReservasjonliste(s);
+                final ReservasjonAdapter adapter = new ReservasjonAdapter(RomReservasjonListe.this, resevasjoner);
+                lv.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+            }
+
+        }
     }
 }

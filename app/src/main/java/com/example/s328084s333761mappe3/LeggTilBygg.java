@@ -27,7 +27,7 @@ public class LeggTilBygg extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.legg_til_bygg);
 
-        setTitle("Nytt bygg");
+        setTitle(R.string.leggTilBygg);
 
         Intent i = this.getIntent();
         adresseStreng = i.getExtras().getString(getString(R.string.adresse));
