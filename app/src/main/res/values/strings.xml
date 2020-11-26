@@ -46,4 +46,7 @@
     <string name="RomNr">Rom Nr: </string>
     <string name="kapasitet">Kapasitet: </string>
     <string name="antall_etasjer">Etasjer: </string>
+    <string name="dato_felt">Dato:</string>
+    <string name="tid_fra_felt">Starttidspunkt:</string>
+    <string name="tif_til_felt">Slutttidspunkt:</string>
 </resources>
