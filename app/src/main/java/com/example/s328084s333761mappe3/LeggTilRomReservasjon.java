@@ -126,7 +126,7 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
         if (item.getItemId() == R.id.lagreAction) {
             //Når brukeren trykker på lagre-ikonet kjøres leggtil-funksjonen
             leggtil();
-            finish();
+
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -146,7 +146,30 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
             feilMelding += getString(R.string.feilDato);
             utfylt = false;
         }
-        if (tilTid.equals("") || fraTid.equals("")) {
+        String[] splittetFra = fraTid.split(":");
+        String[] splittetTil = tilTid.split(":");
+        try {
+            int fraTime = Integer.parseInt(splittetFra[0]);
+            int fraMin = Integer.parseInt(splittetFra[1]);
+            int tilTime = Integer.parseInt(splittetTil[0]);
+            int tilMin = Integer.parseInt(splittetTil[1]);
+            if(fraTime > tilTime) {
+                if(!feilMelding.equals("")) {
+                    feilMelding += ", ";
+                }
+                feilMelding += getString(R.string.fraTil);
+                utfylt = false;
+            }
+            if(fraTime == tilTime) {
+                if(fraMin >= tilMin) {
+                    if(!feilMelding.equals("")) {
+                        feilMelding += ", ";
+                    }
+                    feilMelding += getString(R.string.fraTil);
+                    utfylt = false;
+                }
+            }
+        } catch (Exception e) {
             if(!feilMelding.equals("")) {
                 feilMelding += ", ";
             }
@@ -154,8 +177,10 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
             utfylt = false;
         }
 
+
         if(utfylt){
             jsonLeggTil(dato, fraTid, tilTid);
+            finish();
         }
         else {
             feilMelding += " " + getString(R.string.ikkeFyltUtKorrekt);

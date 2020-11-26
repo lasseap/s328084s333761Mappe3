@@ -49,4 +49,5 @@
     <string name="dato_felt">Dato:</string>
     <string name="tid_fra_felt">Starttidspunkt:</string>
     <string name="tif_til_felt">Slutttidspunkt:</string>
+    <string name="fraTil">start må være før slutt</string>
 </resources>

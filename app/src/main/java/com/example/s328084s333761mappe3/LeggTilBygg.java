@@ -69,7 +69,7 @@ public class LeggTilBygg extends AppCompatActivity {
         if (item.getItemId() == R.id.lagreAction) {
             //Når brukeren trykker på lagre-ikonet kjøres leggtil-funksjonen
             leggtil();
-            finish();
+
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -117,6 +117,7 @@ public class LeggTilBygg extends AppCompatActivity {
         }
         if(utfylt){
             jsonLeggTil(beskrivelseTekst,adresseStreng,koordinaterStreng,antallEtasjer);
+            finish();
         }
         else {
             feilMelding += " " + getString(R.string.ikkeFyltUtKorrekt);
