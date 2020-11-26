@@ -88,11 +88,11 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
             //Formaterer tid på formen mm:tt
             String[] splittetTid = tidspunktFra.split(":");
             if (Integer.parseInt(splittetTid[0]) < 10 && Integer.parseInt(splittetTid[1]) < 10) {
-                tidspunkt = "0" + splittetTid[0] + ":0" + splittetTid[1];
+                tidspunktFra = "0" + splittetTid[0] + ":0" + splittetTid[1];
             } else if (Integer.parseInt(splittetTid[0]) < 10) {
-                tidspunkt = "0" + splittetTid[0] + ":" + splittetTid[1];
+                tidspunktFra = "0" + splittetTid[0] + ":" + splittetTid[1];
             } else if (Integer.parseInt(splittetTid[1]) < 10) {
-                tidspunkt = splittetTid[0] + ":0" + splittetTid[1];
+                tidspunktFra = splittetTid[0] + ":0" + splittetTid[1];
             }
         }
         if(!datoboks.equals("")) {
