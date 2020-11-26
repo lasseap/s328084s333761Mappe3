@@ -35,7 +35,9 @@ public class LeggTilBygg extends AppCompatActivity {
         koordinater = (TextView) findViewById(R.id.koordinaterInn);
         adresse = (TextView) findViewById(R.id.adresseInn);
         adresse.setText(adresseStreng);
-        koordinater.setText(koordinaterStreng);
+        String splittet[] = koordinaterStreng.split(",");
+        String formatertKoordinater = splittet[0].substring(0,5) +"," + splittet[1].substring(0,5);
+        koordinater.setText(formatertKoordinater);
         beskrivelse = (EditText) findViewById(R.id.beskrivelseInn);
         antEtasjer = (EditText) findViewById(R.id.antEtasjerInn);
     }
