@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp">
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
             android:text="@string/adresse"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:paddingLeft="45dp"/>
+            android:paddingLeft="10dp"/>
     </LinearLayout>
 
 
@@ -52,7 +52,7 @@
         android:text="@string/koordinater"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:paddingLeft="45dp"/>
+            android:paddingLeft="10dp"/>
     </LinearLayout>
 
 
@@ -101,7 +101,7 @@
             android:text="@string/byggBeskrivelseInn"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:paddingLeft="45dp"/>
+            android:paddingLeft="10dp"/>
     </LinearLayout>
 
 
