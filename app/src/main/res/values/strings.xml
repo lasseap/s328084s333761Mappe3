@@ -34,6 +34,8 @@
     <string name="visRom">Vis rom</string>
     <string name="bygg_id">bygg_id</string>
     <string name="bygg_etasjer">bygg_etasjer</string>
+    <string name="bygg_koordinater">bygg_koordinater</string>
+    <string name="bygg_beskrivelse">bygg_beskrivelse</string>
     <string name="antallMarkers">antallMarkers</string>
     <string name="romNr">romNr</string>
     <string name="romKapasitet">romKapasitet</string>

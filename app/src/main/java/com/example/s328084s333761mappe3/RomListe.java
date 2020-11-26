@@ -40,6 +40,10 @@ public class RomListe extends AppCompatActivity {
     String antEtasjerText;
     TextView adresse;
     TextView antEtasjer;
+    String koordinater;
+    String beskrivelse;
+    TextView koordinaterBox;
+    TextView beskrivelseBox;
     public View v;
     //Context applicationContext = MapsActivity.getContextOfApplication();
 
@@ -75,20 +79,19 @@ public class RomListe extends AppCompatActivity {
         adresseText = i.getExtras().getString(getString(R.string.byggUt));
         antEtasjerText = i.getExtras().getString(getString(R.string.bygg_etasjer));
         bygg_id = i.getExtras().getString(getString(R.string.bygg_id));
-        /*String[] splittet = bygg_adresse.split("\\s+");
-        String formatertAdresse = splittet[0];
-        for (int j = 1; j < splittet.length; j++) {
-            formatertAdresse += "%20" + splittet[j];
-        }
-        GetByggJSON taskBygg = new GetByggJSON();
-        taskBygg.execute(new String[]{"http://student.cs.hioa.no/~s333761//jsonoutBygg.php/?Adresse="+ formatertAdresse});
-
-         */
+        beskrivelse = i.getExtras().getString(getString(R.string.bygg_beskrivelse));
+        koordinater = i.getExtras().getString(getString(R.string.bygg_koordinater));
 
         adresse = (TextView) findViewById(R.id.adresse);
         antEtasjer = (TextView) findViewById(R.id.antEtasjer);
+        koordinaterBox = findViewById(R.id.koordinater);
+        beskrivelseBox = findViewById(R.id.beskrivelse);
         adresse.setText(adresseText);
         antEtasjer.setText(antEtasjerText);
+        beskrivelseBox.setText(beskrivelse);
+        String splittet[] = koordinater.split(",");
+        String formatertKoordinater = splittet[0].substring(0,5) +"," + splittet[1].substring(0,5);
+        koordinaterBox.setText(formatertKoordinater);
         //Oppretter en liste med alle rom-objekter
 
         GetRomJSON task = new GetRomJSON();

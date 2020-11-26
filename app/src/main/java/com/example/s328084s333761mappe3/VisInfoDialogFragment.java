@@ -35,7 +35,8 @@ public class VisInfoDialogFragment extends DialogFragment {
     String adresse;
     String Id;
     String antEtasjer;
-    SharedPreferences prefs;
+    String beskrivelse;
+    String koordinater;
 /*
     private DialogClickListener callback;
 
@@ -104,6 +105,8 @@ public class VisInfoDialogFragment extends DialogFragment {
                 ivisrom.putExtra(getString(R.string.byggUt), adresseBox.getText());
                 ivisrom.putExtra(getString(R.string.bygg_id),Id);
                 ivisrom.putExtra(getString(R.string.bygg_etasjer),antEtasjer);
+                ivisrom.putExtra(getString(R.string.bygg_beskrivelse),beskrivelse);
+                ivisrom.putExtra(getString(R.string.bygg_koordinater),koordinater);
                 startActivity(ivisrom);
             }
         });
@@ -189,9 +192,11 @@ public class VisInfoDialogFragment extends DialogFragment {
                 String[] splittet = s.split(";");
                 adresseBox.setText(splittet[2]);
                 koordinaterBox.setText(splittet[3]);
+                koordinater = splittet[3];
                 etasjeBox.setText(splittet[4]);
                 antEtasjer = splittet[4];
                 beskrivelseBox.setText(splittet[1]);
+                beskrivelse = splittet[1];
                 Id = splittet[0];
             }
 
