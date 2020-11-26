@@ -2,7 +2,9 @@ package com.example.s328084s333761mappe3;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +23,18 @@ public class LeggTilBygg extends AppCompatActivity {
     EditText antEtasjer;
     String adresseStreng;
     String koordinaterStreng;
+
+    @Override
+    public void onBackPressed() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int antall = prefs.getInt(getString(R.string.antallMarkers), 0);
+        antall = antall - 1;
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(getString(R.string.antallMarkers),antall);
+        editor.apply();
+        MapsActivity.deleteMarker();
+        super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -30,6 +30,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public GoogleMap mMap;
     public static Context contextOfApplication;
     SharedPreferences prefs;
+    public static Marker marker;
+
+    public static void deleteMarker(){
+        if(!(marker == null)) {
+            marker.remove();
+            marker = null;
+        }
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +71,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Add a marker in Pilestredet and move the camera
         LatLng pilestredet = new LatLng(59.921559, 10.733572);
-        mMap.addMarker(new MarkerOptions().position(pilestredet).title("Pilestredet"));
+
         mMap.moveCamera(CameraUpdateFactory.newLatLng(pilestredet));
         moveToCurrentLocation(pilestredet);
 
@@ -91,6 +100,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(this);
     }
 
+
     @Override
     public void onMapClick(LatLng point) {
         mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
@@ -103,9 +113,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Toast.makeText(getApplicationContext(),R.string.ikkeAdresse, Toast.LENGTH_SHORT).show();
             }
             else {
-                MarkerOptions marker = new MarkerOptions().position(new LatLng(point.latitude, point.longitude)).title(splittet[0]);
+
                 int antall = prefs.getInt(getString(R.string.antallMarkers), 0);
-                mMap.addMarker(marker);
                 Intent ileggtilbygg = new Intent(this, LeggTilBygg.class);
                 ileggtilbygg.putExtra(getString(R.string.adresse),splittet[0]);
                 String koordinater = point.latitude + "," + point.longitude;
@@ -115,6 +124,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 editor.putString(""+antall,koordinater);
                 editor.putInt(getString(R.string.antallMarkers),antall);
                 editor.apply();
+                marker = mMap.addMarker(new MarkerOptions().position(point).title(splittet[0]));
                 startActivity(ileggtilbygg);
             }
 
