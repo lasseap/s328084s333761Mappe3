@@ -3,6 +3,8 @@ package com.example.s328084s333761mappe3;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -14,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 
 public class LeggTilBygg extends AppCompatActivity {
@@ -61,6 +65,11 @@ public class LeggTilBygg extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.leggtil_meny, menu);
+        MenuItem lagreItem = menu.findItem(R.id.lagreAction);
+        Drawable lagreIcon = DrawableCompat.wrap(lagreItem.getIcon());
+        ColorStateList colorSelector = ResourcesCompat.getColorStateList(getResources(), R.color.black, getTheme());
+        DrawableCompat.setTintList(lagreIcon, colorSelector);
+        lagreItem.setIcon(lagreIcon);
         return true;
     }
 
@@ -98,7 +107,7 @@ public class LeggTilBygg extends AppCompatActivity {
             int antEtasjer;
             try {
                 antEtasjer = Integer.parseInt(antallEtasjer);
-                if( antEtasjer< 21 && antEtasjer < 0) {
+                if( antEtasjer > 20 || antEtasjer < 1) {
                     if(!feilMelding.equals("")) {
                         feilMelding += ", ";
                     }

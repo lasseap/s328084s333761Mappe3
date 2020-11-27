@@ -17,7 +17,7 @@
             android:id="@+id/textView2"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-
+android:paddingLeft="10dp"
             android:text="@string/etasjeNr"
             android:textColor="@color/black"
             android:textSize="20sp"/>
@@ -38,7 +38,7 @@
             android:id="@+id/textView"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-
+android:paddingLeft="10dp"
             android:text="@string/RomNr"
             android:textColor="@color/black"
             android:textSize="20sp"/>
@@ -60,7 +60,7 @@
             android:id="@+id/textView3"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-
+android:paddingLeft="10dp"
             android:text="@string/kapasitet"
             android:textColor="@color/black"
             android:textSize="20sp"/>

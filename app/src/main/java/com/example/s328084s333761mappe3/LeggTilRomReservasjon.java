@@ -2,6 +2,8 @@ package com.example.s328084s333761mappe3;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -15,7 +17,11 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.DialogFragment;
+
+import java.util.ArrayList;
 
 public class LeggTilRomReservasjon extends AppCompatActivity implements DatePickerFragment.OnDialogDismissListener, TimePickerFragment.OnDialogDismissListener, TimePickerFraFragment.OnDialogDismissListener {
 
@@ -117,6 +123,11 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.leggtil_meny, menu);
+        MenuItem lagreItem = menu.findItem(R.id.lagreAction);
+        Drawable lagreIcon = DrawableCompat.wrap(lagreItem.getIcon());
+        ColorStateList colorSelector = ResourcesCompat.getColorStateList(getResources(), R.color.black, getTheme());
+        DrawableCompat.setTintList(lagreIcon, colorSelector);
+        lagreItem.setIcon(lagreIcon);
         return true;
     }
 
@@ -178,14 +189,31 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
         }
 
 
-        if(utfylt){
-            jsonLeggTil(dato, fraTid, tilTid);
-            finish();
-        }
-        else {
+        if(!utfylt) {
             feilMelding += " " + getString(R.string.ikkeFyltUtKorrekt);
             Toast.makeText(getApplicationContext(),feilMelding, Toast.LENGTH_SHORT).show();
         }
+        else {
+            Boolean opptatt = false;
+            ArrayList<RomReservasjon> liste = RomReservasjonListe.reservasjonliste();
+            if(!(liste == null)) {
+                for(RomReservasjon reservasjon : liste) {
+                    if(opptattSjekk(reservasjon,dato,fraTid,tilTid)) {
+                        opptatt =true;
+                    }
+
+                }
+            }
+            if (opptatt) {
+                Toast.makeText(getApplicationContext(),getString(R.string.opptatt), Toast.LENGTH_SHORT).show();
+            }
+            else {
+                jsonLeggTil(dato, fraTid, tilTid);
+                finish();
+            }
+        }
+
+
     }
 
     public void jsonLeggTil(String dato, String fra, String til) {
@@ -195,6 +223,74 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
         SendJSON task = new SendJSON();
         task.execute((new String[]{json}));
 
+    }
+
+    public boolean opptattSjekk(RomReservasjon reservasjon, String dato, String fraTid, String tilTid) {
+        if(reservasjon.dato.equals(dato)) {
+            String[] splittetFra = fraTid.split(":");
+            String[] splittetTil = tilTid.split(":");
+            String[] splittetFraSjekk = reservasjon.fra.split(":");
+            String[] splittetTilSjekk = reservasjon.til.split(":");
+            try {
+                int fraTime = Integer.parseInt(splittetFra[0]);
+                int fraMin = Integer.parseInt(splittetFra[1]);
+                int tilTime = Integer.parseInt(splittetTil[0]);
+                int tilMin = Integer.parseInt(splittetTil[1]);
+                int fraTimeSjekk = Integer.parseInt(splittetFraSjekk[0]);
+                int fraMinSjekk = Integer.parseInt(splittetFraSjekk[1]);
+                int tilTimeSjekk = Integer.parseInt(splittetTilSjekk[0]);
+                int tilMinSjekk = Integer.parseInt(splittetTilSjekk[1]);
+                if(fraTime > fraTimeSjekk) {
+                    if(tilTimeSjekk > fraTime) {
+                        return true;
+                    }
+                    if(tilTimeSjekk == fraTime) {
+                        if(tilMinSjekk > fraMin) {
+                            return true;
+                        }
+                    }
+                }
+                else if(fraTime == fraTimeSjekk) {
+                    if(fraMin > fraMinSjekk) {
+                        if(tilTimeSjekk > fraTime) {
+                            return true;
+                        }
+                        if(tilTimeSjekk == fraTime) {
+                            if(tilMinSjekk > fraMin) {
+                                return true;
+                            }
+                        }
+                    }
+                    else {
+                        if(tilTime == fraTimeSjekk){
+                            if(tilMin > fraMinSjekk){
+                                return true;
+                            }
+                        }
+                        else {
+                            return true;
+                        }
+
+                    }
+                }
+                else {
+                    if(tilTime > fraTimeSjekk) {
+                        return true;
+                    }
+                    else {
+                        if(tilTime == fraTimeSjekk) {
+                            if(tilMin > fraMinSjekk) {
+                                return  true;
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+
+            }
+
+        }
+        return false;
     }
 
     @Override

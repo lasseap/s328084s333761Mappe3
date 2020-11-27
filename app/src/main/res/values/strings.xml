@@ -50,4 +50,5 @@
     <string name="tid_fra_felt">Starttidspunkt:</string>
     <string name="tif_til_felt">Slutttidspunkt:</string>
     <string name="fraTil">start må være før slutt</string>
+    <string name="opptatt">Allerede booket i dette tidsrommet</string>
 </resources>

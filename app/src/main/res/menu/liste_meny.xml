@@ -4,6 +4,8 @@
     <item
         android:id="@+id/leggTilAction"
         android:icon="@android:drawable/ic_input_add"
+        android:iconTintMode="src_in"
+        android:iconTint="@color/black"
         android:title=""
         app:showAsAction="always|collapseActionView" />
 

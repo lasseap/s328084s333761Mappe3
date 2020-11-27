@@ -18,7 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_menu_mylocation"
-            app:tint="@color/black"/>
+            app:tint="@color/black"
+            android:paddingLeft="20dp"/>
 
         <TextView
             android:id="@+id/adresseInn"
@@ -41,7 +42,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_dialog_map"
-            android:tint="#707070" />
+            android:tint="#707070"
+            android:paddingLeft="20dp"/>
 
         <TextView
             android:id="@+id/koordinaterInn"
@@ -63,7 +65,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:text="@string/antall_etasjer" />
+            android:text="@string/antall_etasjer"
+            android:paddingLeft="10dp"/>
 
         <EditText
             android:id="@+id/antEtasjerInn"
@@ -83,12 +86,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_menu_info_details"
-            android:tint="@color/black" />
+            android:tint="@color/black"
+            android:paddingLeft="20dp"/>
 
         <EditText
             android:id="@+id/beskrivelseInn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/byggBeskrivelseInn" />
+            android:hint="@string/byggBeskrivelseInn"
+            android:paddingLeft="10dp"
+            />
     </LinearLayout>
 </LinearLayout>

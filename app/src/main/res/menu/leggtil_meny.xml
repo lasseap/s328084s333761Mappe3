@@ -4,6 +4,7 @@
     <item
         android:id="@+id/lagreAction"
         android:icon="@android:drawable/ic_menu_save"
+        app:tint="@color/black"
 
         android:title=""
         app:showAsAction="always|collapseActionView" />

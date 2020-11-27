@@ -3,6 +3,8 @@ package com.example.s328084s333761mappe3;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -17,6 +19,8 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,12 +45,22 @@ public class RomReservasjonListe extends AppCompatActivity {
     TextView etasjeNr;
     TextView kapasitet;
     TextView beskrivelse;
+    static ArrayList<RomReservasjon> resevasjoner;
+
+    public static ArrayList<RomReservasjon> reservasjonliste() {
+        return resevasjoner;
+    }
 
     public RomReservasjonListe() {}
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.liste_meny, menu);
+        MenuItem leggTilItem = menu.findItem(R.id.leggTilAction);
+        Drawable leggTilIcon = DrawableCompat.wrap(leggTilItem.getIcon());
+        ColorStateList colorSelector = ResourcesCompat.getColorStateList(getResources(), R.color.black, getTheme());
+        DrawableCompat.setTintList(leggTilIcon, colorSelector);
+        leggTilItem.setIcon(leggTilIcon);
         return true;
     }
 
@@ -99,11 +113,12 @@ public class RomReservasjonListe extends AppCompatActivity {
 
     //Oppdaterer listefragmenetet
     public void oppdater() {
-        Log.d("TAG", "oppdaterer res");
 
+        String json ="http://student.cs.hioa.no/~s333761//jsonoutRomReservasjon.php/?Rom_id="+rom_id;
+        Log.d("TAG", "oppdaterer res "+ json);
         GetRomReservasjonJSON task = new GetRomReservasjonJSON();
         task.execute(new
-                String[]{"http://student.cs.hioa.no/~s333761//jsonoutRomReservasjon.php/?Rom_id="+rom_id});
+                String[]{json});
 
 
     }
@@ -187,7 +202,7 @@ public class RomReservasjonListe extends AppCompatActivity {
             Log.d("TAG","I post reservasjon: "+s);
             ListView lv = (ListView) findViewById(R.id.liste);
             if(!s.equals("")) {
-                ArrayList<RomReservasjon> resevasjoner = lagRomReservasjonliste(s);
+                resevasjoner = lagRomReservasjonliste(s);
                 final ReservasjonAdapter adapter = new ReservasjonAdapter(RomReservasjonListe.this, resevasjoner);
                 lv.setAdapter(adapter);
                 adapter.notifyDataSetChanged();

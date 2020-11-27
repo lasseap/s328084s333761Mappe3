@@ -6,6 +6,8 @@ import android.app.LauncherActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -22,6 +24,8 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,8 +54,14 @@ public class RomListe extends AppCompatActivity {
     public RomListe() {}
 
     public boolean onCreateOptionsMenu(Menu menu) {
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.liste_meny, menu);
+        MenuItem leggTilItem = menu.findItem(R.id.leggTilAction);
+        Drawable leggTilIcon = DrawableCompat.wrap(leggTilItem.getIcon());
+        ColorStateList colorSelector = ResourcesCompat.getColorStateList(getResources(), R.color.black, getTheme());
+        DrawableCompat.setTintList(leggTilIcon, colorSelector);
+        leggTilItem.setIcon(leggTilIcon);
         return true;
     }
 

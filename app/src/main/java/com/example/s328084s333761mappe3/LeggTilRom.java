@@ -1,6 +1,8 @@
 package com.example.s328084s333761mappe3;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 public class LeggTilRom extends AppCompatActivity {
 
@@ -37,6 +41,11 @@ public class LeggTilRom extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.leggtil_meny, menu);
+        MenuItem lagreItem = menu.findItem(R.id.lagreAction);
+        Drawable lagreIcon = DrawableCompat.wrap(lagreItem.getIcon());
+        ColorStateList colorSelector = ResourcesCompat.getColorStateList(getResources(), R.color.black, getTheme());
+        DrawableCompat.setTintList(lagreIcon, colorSelector);
+        lagreItem.setIcon(lagreIcon);
         return true;
     }
 
@@ -80,7 +89,7 @@ public class LeggTilRom extends AppCompatActivity {
             int etasjeNr;
             try {
                 etasjeNr = Integer.parseInt(etasjeNrText);
-                if( etasjeNr< 21 && etasjeNr < 0) {
+                if( etasjeNr> 20 || etasjeNr < 1) {
                     if(!feilMelding.equals("")) {
                         feilMelding += ", ";
                     }
@@ -107,7 +116,7 @@ public class LeggTilRom extends AppCompatActivity {
             int kapasitet;
             try {
                 kapasitet = Integer.parseInt(kapasitetTekst);
-                if( kapasitet < 0) {
+                if( kapasitet < 1) {
                     if(!feilMelding.equals("")) {
                         feilMelding += ", ";
                     }

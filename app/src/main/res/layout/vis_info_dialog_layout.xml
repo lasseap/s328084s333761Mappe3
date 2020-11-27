@@ -116,14 +116,18 @@
             android:id="@+id/leggTilRomKnapp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/visRom" />
+            android:text="@string/visRom"
+            android:background="@drawable/gul_knapp"
+            android:layout_marginBottom="10dp"/>
 
 
         <Button
             android:id="@+id/avsluttKnapp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/avslutt" />
+            android:text="@string/avslutt"
+            android:background="@drawable/gul_knapp"
+            android:layout_marginBottom="10dp"/>
     </LinearLayout>
 
 
