@@ -10,7 +10,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -47,11 +46,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.clear();
-        editor.apply();
 
-        Log.d("TAG", "Nå er shared slettet");
         mapFragment.getMapAsync(this);
         contextOfApplication = getApplicationContext();
     }
