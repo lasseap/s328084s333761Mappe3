@@ -141,6 +141,52 @@ public class RomListe extends AppCompatActivity {
         return romliste;
     }
 
+    public ArrayList<Rom> sorterRom(ArrayList<Rom> romListe) {
+        ArrayList<Rom> sortertListe = new ArrayList<>(); //oppretter ny liste
+        sortertListe.add(romListe.get(0)); //legger til det første rommet i innparameter-listen i det sorterte arrayet
+        boolean leter; //boolean som sier om vi leter etter riktig plass i sortertListe eller om vi har funnet riktig plass
+        for (int i = 1; i < romListe.size(); i++) {
+            leter = true;
+            String etasje = romListe.get(i).EtasjeNr;
+            int etasjeNr = Integer.parseInt(etasje);
+            int plassering = 0; //plasseringen til det originale reservasjonen i den sorterte listen
+            while (leter) {
+                String etasjeSortert = sortertListe.get(plassering).getEtasjeNr();
+                int etasjeNrSortert = Integer.parseInt(etasjeSortert);
+                if(etasjeNr < etasjeNrSortert) {
+                    //Det nye rommet ligger i en etasje under den vi sjekker mot og skal derfor foran rommet i listen
+                    sortertListe.add(plassering,romListe.get(i));
+                    leter = false; //ferdig med dette rommet og avslutter letingen
+                }
+                else if (etasjeNr == etasjeNrSortert) {
+                    // hvis de ligger i samme etasje skal det nye rommet ligge bakerst av rommene i den etasjen
+                    plassering++;
+                    if(plassering == sortertListe.size()) {
+                        //Hvis plassering er like stor som antall elementer i den sorterte listen
+                        //betyr det at vi er på slutten av den sorterte listen og det er ikke flere
+                        //rom å sammenligne med. Legger derfor det nye bakerst i den sorterte listen
+                        sortertListe.add(romListe.get(i));
+                        leter = false;
+                    }
+
+                }
+                else {
+                    //hvis det nye rommets etasjenr er større en sjekkrommet, skal den legges etter sjekkrommet
+                    plassering++;
+                    if(plassering == sortertListe.size()) {
+                        //Hvis plassering er like stor som antall elementer i den sorterte listen
+                        //betyr det at vi er på slutten av den sorterte listen og det er ikke flere
+                        //rom å sammenligne med. Legger derfor det nye bakerst i den sorterte listen
+                        sortertListe.add(romListe.get(i));
+                        leter = false;
+                    }
+
+                }
+            }
+        }
+        return sortertListe;
+    }
+
 
     //Klasse for å hente rom fra webserver
     private class GetRomJSON extends AsyncTask<String, Void,String> {
@@ -204,6 +250,7 @@ public class RomListe extends AppCompatActivity {
             if(!s.equals("")) {
                 //lager en liste med rom fra jsonstrengen
                 ArrayList<Rom> rom = lagRomliste(s);
+                rom = sorterRom(rom);
                 //setter inn i listview
                 final RomAdapter adapter = new RomAdapter(RomListe.this,rom);
                 lv.setAdapter(adapter);
