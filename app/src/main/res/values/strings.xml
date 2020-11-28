@@ -51,4 +51,7 @@
     <string name="tif_til_felt">Slutttidspunkt:</string>
     <string name="fraTil">start må være før slutt</string>
     <string name="opptatt">Allerede booket i dette tidsrommet</string>
+    <string name="kapasitet_feil">Kapasitet må være et heltall større enn 0. </string>
+    <string name="etasjenr_feil">EtasjeNr må være et heltall mellom 1 og 20 og må være en av byggets etasjer. </string>
+    <string name="antetasjer_feil">Antall etasjer må være et heltall mellom 1 og 20. </string>
 </resources>

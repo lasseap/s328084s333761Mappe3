@@ -6,21 +6,17 @@ import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.DialogFragment;
-
 import java.util.ArrayList;
 
 public class LeggTilRomReservasjon extends AppCompatActivity implements DatePickerFragment.OnDialogDismissListener, TimePickerFragment.OnDialogDismissListener, TimePickerFraFragment.OnDialogDismissListener {
@@ -39,6 +35,7 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.legg_til_romreservasjon);
 
+        //henter info som ble sendt med intenten
         Intent i = this.getIntent();
         rom_id = i.getExtras().getInt(getString(R.string.romUt));
         romNr = i.getExtras().getString(getString(R.string.romNr));
@@ -123,6 +120,7 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.leggtil_meny, menu);
+        //gjør ikonet svart
         MenuItem lagreItem = menu.findItem(R.id.lagreAction);
         Drawable lagreIcon = DrawableCompat.wrap(lagreItem.getIcon());
         ColorStateList colorSelector = ResourcesCompat.getColorStateList(getResources(), R.color.black, getTheme());
@@ -137,11 +135,9 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
         if (item.getItemId() == R.id.lagreAction) {
             //Når brukeren trykker på lagre-ikonet kjøres leggtil-funksjonen
             leggtil();
-
         } else {
             return super.onOptionsItemSelected(item);
         }
-
         return true;
     }
 
@@ -150,7 +146,9 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
         String dato = datoBoks.getText().toString();
         String tilTid = tilTidBoks.getText().toString();
         String fraTid = fraTidBoks.getText().toString();
+        //sjekker at inputen fra bruker er korrekt
         String feilMelding = "";
+        String feilMelding2 = "";
         Boolean utfylt = true;
         //sjekker at alle felter er fylt ut korrekt
         if (dato.equals("")) {
@@ -159,6 +157,7 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
         }
         String[] splittetFra = fraTid.split(":");
         String[] splittetTil = tilTid.split(":");
+        //sjekker at start er før slutt
         try {
             int fraTime = Integer.parseInt(splittetFra[0]);
             int fraMin = Integer.parseInt(splittetFra[1]);
@@ -168,7 +167,8 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
                 if(!feilMelding.equals("")) {
                     feilMelding += ", ";
                 }
-                feilMelding += getString(R.string.fraTil);
+                feilMelding += getString(R.string.feilTid);
+                feilMelding2 += getString(R.string.fraTil);
                 utfylt = false;
             }
             if(fraTime == tilTime) {
@@ -176,7 +176,8 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
                     if(!feilMelding.equals("")) {
                         feilMelding += ", ";
                     }
-                    feilMelding += getString(R.string.fraTil);
+                    feilMelding += getString(R.string.feilTid);
+                    feilMelding2 += getString(R.string.fraTil);
                     utfylt = false;
                 }
             }
@@ -188,13 +189,15 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
             utfylt = false;
         }
 
-
+        //viser feilmelding til bruker
         if(!utfylt) {
-            feilMelding += " " + getString(R.string.ikkeFyltUtKorrekt);
-            Toast.makeText(getApplicationContext(),feilMelding, Toast.LENGTH_SHORT).show();
+            feilMelding += " " + getString(R.string.ikkeFyltUtKorrekt) + ". ";
+            Toast.makeText(getApplicationContext(),feilMelding + feilMelding2, Toast.LENGTH_SHORT).show();
         }
         else {
+            //sjekker om rommet allerede er reservert i tidsrommet
             Boolean opptatt = false;
+            //henter listen med reservasjoner
             ArrayList<RomReservasjon> liste = RomReservasjonListe.reservasjonliste();
             if(!(liste == null)) {
                 for(RomReservasjon reservasjon : liste) {
@@ -204,9 +207,11 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
 
                 }
             }
+            //viser melding om at den tiden allerede er reservert til bruker
             if (opptatt) {
                 Toast.makeText(getApplicationContext(),getString(R.string.opptatt), Toast.LENGTH_SHORT).show();
             }
+            //kaller funksjon for å legge til romreservasjon
             else {
                 jsonLeggTil(dato, fraTid, tilTid);
                 finish();
@@ -216,16 +221,18 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
 
     }
 
+    //funsjon for å kalle SendJson for å legge til romservasjon
     public void jsonLeggTil(String dato, String fra, String til) {
         String json = "http://student.cs.hioa.no/~s333761//jsoninRomReservasjon.php/?Rom_id="+ rom_id + "&Dato=" + dato + "&TidFra="
                 + fra + "&TidTil=" + til;
-        Log.d("TAG", json);
         SendJSON task = new SendJSON();
         task.execute((new String[]{json}));
 
     }
 
+    //funksjon som sjekker om rommet allerede er reservert
     public boolean opptattSjekk(RomReservasjon reservasjon, String dato, String fraTid, String tilTid) {
+        //sjekker om det er samme dag
         if(reservasjon.dato.equals(dato)) {
             String[] splittetFra = fraTid.split(":");
             String[] splittetTil = tilTid.split(":");
@@ -240,6 +247,7 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
                 int fraMinSjekk = Integer.parseInt(splittetFraSjekk[1]);
                 int tilTimeSjekk = Integer.parseInt(splittetTilSjekk[0]);
                 int tilMinSjekk = Integer.parseInt(splittetTilSjekk[1]);
+                //sjekker om nye reservasjonen starter før eksisterende og om den isåfall slutter før den eksisterende starter
                 if(fraTime > fraTimeSjekk) {
                     if(tilTimeSjekk > fraTime) {
                         return true;
@@ -250,7 +258,9 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
                         }
                     }
                 }
+                //sjekker om de starter på samme time
                 else if(fraTime == fraTimeSjekk) {
+                    //sjekker om nye er ferdig før eksisterende
                     if(fraMin > fraMinSjekk) {
                         if(tilTimeSjekk > fraTime) {
                             return true;
@@ -273,7 +283,9 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
 
                     }
                 }
+                //sjekker om nye starter etter eksisterende
                 else {
+                    //sjekker om eksisterende er ferdig før nye begynner
                     if(tilTime > fraTimeSjekk) {
                         return true;
                     }
@@ -290,13 +302,14 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
             }
 
         }
+        //returnerer at det ikke er reservert
         return false;
     }
 
     @Override
     protected void onDestroy() {
-        //Når brukeren går ut av endresiden skal velgDato- og velgTidspunkt-variablene nullstilles
-        //slik at disse ikke blir satt når en bruker skal endre et annet møte
+        //Når brukeren går ut av leggetilsiden skal velgDato- og velgTidspunkt-variablene nullstilles
+        //slik at disse ikke blir satt når en bruker skal legge til en annen romreservasjon
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(getString(R.string.velgDato),"");
         editor.putString(getString(R.string.velgTidspunkt),"");

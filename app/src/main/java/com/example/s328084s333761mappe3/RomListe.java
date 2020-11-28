@@ -1,36 +1,25 @@
 package com.example.s328084s333761mappe3;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.LauncherActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -48,8 +37,6 @@ public class RomListe extends AppCompatActivity {
     String beskrivelse;
     TextView koordinaterBox;
     TextView beskrivelseBox;
-    public View v;
-    //Context applicationContext = MapsActivity.getContextOfApplication();
 
     public RomListe() {}
 
@@ -57,6 +44,7 @@ public class RomListe extends AppCompatActivity {
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.liste_meny, menu);
+        //gjør ikonet svart
         MenuItem leggTilItem = menu.findItem(R.id.leggTilAction);
         Drawable leggTilIcon = DrawableCompat.wrap(leggTilItem.getIcon());
         ColorStateList colorSelector = ResourcesCompat.getColorStateList(getResources(), R.color.black, getTheme());
@@ -70,12 +58,13 @@ public class RomListe extends AppCompatActivity {
         if (item.getItemId() == R.id.leggTilAction) {
             //Når brukeren trykker på pluss-ikonet kjøres leggtil-funksjonen
             Intent leggTilIntent = new Intent(this,LeggTilRom.class);
+            //sender info om bygget med intentet
             leggTilIntent.putExtra(getString(R.string.byggUt),bygg_id);
+            leggTilIntent.putExtra(getString(R.string.antall_etasjer),antEtasjerText);
             startActivity(leggTilIntent);
         } else {
             return super.onOptionsItemSelected(item);
         }
-
         return true;
     }
 
@@ -85,6 +74,7 @@ public class RomListe extends AppCompatActivity {
         setContentView(R.layout.romliste_layout);
         setTitle(R.string.rom);
 
+        //henter info som ble sendt med intentet
         Intent i = this.getIntent();
         adresseText = i.getExtras().getString(getString(R.string.byggUt));
         antEtasjerText = i.getExtras().getString(getString(R.string.bygg_etasjer));
@@ -99,14 +89,16 @@ public class RomListe extends AppCompatActivity {
         adresse.setText(adresseText);
         antEtasjer.setText(antEtasjerText);
         beskrivelseBox.setText(beskrivelse);
+        //viser bare de 2 første decimalene av koordinatene
         String splittet[] = koordinater.split(",");
         String formatertKoordinater = splittet[0].substring(0,5) +"," + splittet[1].substring(0,5);
         koordinaterBox.setText(formatertKoordinater);
         //Oppretter en liste med alle rom-objekter
 
+        //henter alle rommene til bygget fra webserver
         GetRomJSON task = new GetRomJSON();
         String json = "http://student.cs.hioa.no/~s333761//jsonoutRom.php/?Bygg_id="+bygg_id;
-        Log.d("TAG", json);
+
         task.execute(new
                 String[]{json});
 
@@ -116,22 +108,26 @@ public class RomListe extends AppCompatActivity {
     public void oppdater() {
         GetRomJSON task = new GetRomJSON();
         String json = "http://student.cs.hioa.no/~s333761//jsonoutRom.php/?Bygg_id="+bygg_id;
-        Log.d("TAG", json);
+
         task.execute(new
                 String[]{json});
     }
 
 
+    //oppdaterer listen når brukeren returnerer til aktiviteten
     @Override
     public void onResume() {
         super.onResume();
         oppdater();
     }
 
+    //funksjon fro å lage en liste med rom fra jsonstrengen
     public ArrayList<Rom> lagRomliste(String romJson) {
+        //splitter opp strengen for hvert rom
         String[] splittet = romJson.split(":");
         ArrayList<Rom> romliste = new ArrayList<>();
         for (String string : splittet) {
+            //splitter opp hvert rom
             String[] splittetRom = string.split(";");
             Rom rom = new Rom();
             rom.Id = Integer.parseInt(splittetRom[0]);
@@ -146,10 +142,8 @@ public class RomListe extends AppCompatActivity {
     }
 
 
-
+    //Klasse for å hente rom fra webserver
     private class GetRomJSON extends AsyncTask<String, Void,String> {
-        JSONObject jsonObject;
-        SharedPreferences prefs;
 
         @Override
         protected String doInBackground(String... urls) {
@@ -177,6 +171,7 @@ public class RomListe extends AppCompatActivity {
                     conn.disconnect();
                     try {
                         JSONArray mat = new JSONArray(output);
+                        //henter ut data fra JSONarrayen og lagrer i en streng
                         for (int i = 0; i < mat.length(); i++) {
                             JSONObject jsonobject = mat.getJSONObject(i);
                             String id = jsonobject.getString("id");
@@ -205,9 +200,11 @@ public class RomListe extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             ListView lv = (ListView) findViewById(R.id.liste);
-            Log.d("TAG","I post rom "+ s);
+
             if(!s.equals("")) {
+                //lager en liste med rom fra jsonstrengen
                 ArrayList<Rom> rom = lagRomliste(s);
+                //setter inn i listview
                 final RomAdapter adapter = new RomAdapter(RomListe.this,rom);
                 lv.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
@@ -215,6 +212,7 @@ public class RomListe extends AppCompatActivity {
                     @Override public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         Rom data = adapter.getItem(i);
                         Intent reservasjonIntent = new Intent(RomListe.this,RomReservasjonListe.class); //Åpne romreservasjon her
+                        //sender med info om det valgte rommet
                         reservasjonIntent.putExtra(getString(R.string.romUt),data.Id);
                         reservasjonIntent.putExtra(getString(R.string.romEtasje),data.EtasjeNr);
                         reservasjonIntent.putExtra(getString(R.string.romBeskrivelse),data.Beskrivelse);
@@ -224,9 +222,6 @@ public class RomListe extends AppCompatActivity {
                     }
                 });
             }
-
-
-
         }
     }
 }

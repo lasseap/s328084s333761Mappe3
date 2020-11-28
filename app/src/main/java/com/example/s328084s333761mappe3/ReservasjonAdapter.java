@@ -16,7 +16,7 @@ public class ReservasjonAdapter extends ArrayAdapter<RomReservasjon> {
 
     @Override
     public View getView(int posisjon, View convertView, ViewGroup parent) {
-        //Får tak i møte-objektet for denne posisjonen
+        //Får tak i romreservasjon-objektet for denne posisjonen
         RomReservasjon romReservasjon = getItem(posisjon);
         //Sjekker om en eksisterende view blir brukt, hvis ikke inflater vi viewet
         if (convertView == null) {

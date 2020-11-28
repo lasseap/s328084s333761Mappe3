@@ -111,23 +111,17 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="50dp"
-        android:paddingRight="50dp">
+        android:paddingRight="50dp"
+        android:paddingTop="20dp">
         <Button
             android:id="@+id/leggTilRomKnapp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/visRom"
             android:background="@drawable/gul_knapp"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="20dp"/>
 
 
-        <Button
-            android:id="@+id/avsluttKnapp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/avslutt"
-            android:background="@drawable/gul_knapp"
-            android:layout_marginBottom="10dp"/>
     </LinearLayout>
 
 
