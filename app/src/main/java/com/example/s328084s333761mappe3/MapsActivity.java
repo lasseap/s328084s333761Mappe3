@@ -32,7 +32,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     SharedPreferences prefs;
     public static Marker marker;
 
-    // funksjon for å slette en markør på kartet, brukes hvis opprettelse av bygg avbrytes
+    //Funksjon for å slette en markør på kartet, brukes hvis opprettelse av bygg avbrytes
     public static void deleteMarker(){
         if(!(marker == null)) {
             marker.remove();
@@ -47,15 +47,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        /*SharedPreferences.Editor editor = prefs.edit();
+        SharedPreferences.Editor editor = prefs.edit();
         editor.clear();
         editor.apply();
 
-         */
+        Log.d("TAG", "Nå er shared slettet");
         mapFragment.getMapAsync(this);
         contextOfApplication = getApplicationContext();
     }
-    //hjelpefunksjon for å få konteksten til mapsActivity
+    //Hjelpefunksjon for å få konteksten til mapsActivity
     public static Context getContextOfApplication(){
         return contextOfApplication;
     }
@@ -64,16 +64,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // move the camera to Pilestredet
+        //Setter kamera på Pilestredet
         LatLng pilestredet = new LatLng(59.921559, 10.733572);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(pilestredet));
         moveToCurrentLocation(pilestredet);
 
-        //lager et geocoder objekt for å finne adresser
+        //Lager et geocoder-objekt for å finne adresser
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        //henter antallet bygg som er lagret i shared preferences
+        //Henter antallet bygg som er lagret i shared preferences
         int antall = prefs.getInt(getString(R.string.antallMarkers), 0);
-        //henter ut koordinatene for byggene
+        //Henter ut koordinatene for byggene
         for (int i = 0;i < antall;i++) {
             int ant = i + 1;
             String koordinater = prefs.getString("" + ant, "noe gikk galt");
@@ -92,40 +92,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 e.printStackTrace();
             }
         }
-        //deklarerer listener for å klikke på kartet og på markører
+        //Deklarerer listener for å klikke på kartet og på markører
         mMap.setOnMapClickListener(this);
         mMap.setOnMarkerClickListener(this);
     }
 
-    //funksjon for når kartet klikkes på
+    //Funksjon for når kartet klikkes på
     @Override
     public void onMapClick(LatLng point) {
         //Flytter fokus til stedet som ble klikket på
         mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
-        //lager et geokoder objekt for å finne adresse
+        //Lager et geokoder-objekt for å finne adresse
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(point.latitude, point.longitude, 1);
             String[] splittet = addresses.get(0).getAddressLine(0).split(",");
-            //sjekker om punktet har en lovlig adresse
+            //Sjekker om punktet har en lovlig adresse
             if(splittet.length < 3) {
                 Toast.makeText(getApplicationContext(),R.string.ikkeAdresse, Toast.LENGTH_SHORT).show();
             }
             else {
-                //henter ut antall lagrede markører for bygg
+                //Henter ut antall lagrede markører for bygg
                 int antall = prefs.getInt(getString(R.string.antallMarkers), 0);
-                //åpner nytt vindu med oppretelse av bygg
+                //Åpner nytt vindu med oppretelse av bygg
                 Intent ileggtilbygg = new Intent(this, LeggTilBygg.class);
                 ileggtilbygg.putExtra(getString(R.string.adresse),splittet[0]);
                 String koordinater = point.latitude + "," + point.longitude;
                 ileggtilbygg.putExtra(getString(R.string.koordinater),koordinater);
                 antall++;
                 SharedPreferences.Editor editor = prefs.edit();
-                //legger inn ny markør sine koordinater og øker antallet lagrede markører
+                //Legger inn ny markør sine koordinater og øker antallet lagrede markører
                 editor.putString(""+antall,koordinater);
                 editor.putInt(getString(R.string.antallMarkers),antall);
                 editor.apply();
-                //oppretter markør og legger i variabel med siste oprettete markør
+                //Oppretter markør og legger i variabel med siste oprettete markør
                 marker = mMap.addMarker(new MarkerOptions().position(point).title(splittet[0]));
                 startActivity(ileggtilbygg);
             }
@@ -135,10 +135,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
     }
-    //funksjon for klikking på markør
+    //Funksjon for klikking på markør
     @Override
     public boolean onMarkerClick(Marker marker) {
-        //viser info dialog box og sender med adressen lagret i markøren
+        //Viser infodialog box og sender med adressen lagret i markøren
         visInfoDialog(marker.getTitle());
         return false;
     }
@@ -148,7 +148,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         dialog.show(getSupportFragmentManager(),"VisInfoDialog");
     }
 
-    //funksjon for å gå til nåværende posisjon
+    //Funksjon for å gå til nåværende posisjon
     private void moveToCurrentLocation(LatLng currentLocation) {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,15));
         // Zoom in, animating the camera.

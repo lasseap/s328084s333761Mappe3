@@ -32,7 +32,6 @@ public class VisInfoDialogFragment extends DialogFragment {
     String beskrivelse;
     String koordinater;
 
-
     public VisInfoDialogFragment(String adresse) {
         this.adresse = adresse;
     }
@@ -46,19 +45,19 @@ public class VisInfoDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Get field from view
+        //Finner tekstboksene i layouten
         adresseBox = (TextView) view.findViewById(R.id.adresse);
         koordinaterBox = (TextView) view.findViewById(R.id.koordinater);
         etasjeBox = (TextView) view.findViewById(R.id.antEtasjer);
         beskrivelseBox = (TextView) view.findViewById(R.id.beskrivelse);
         GetByggJSON bygg = new GetByggJSON();
-        //formaterer adresse fordi httpurlconnection ikke takler vanlige mellomrom i urlen
+        //Formaterer adresse fordi httpurlconnection ikke takler vanlige mellomrom i url-en
         String[] splittet = adresse.split("\\s+");
         String formatertAdresse = splittet[0];
         for (int i = 1; i < splittet.length; i++) {
             formatertAdresse += "%20" + splittet[i];
         }
-        //henter bygget fra webserver
+        //Henter bygget fra webserver
         bygg.execute(new
                 String[]{"http://student.cs.hioa.no/~s333761/JSONoutBygg.php/?Adresse="+formatertAdresse});
 
@@ -66,9 +65,9 @@ public class VisInfoDialogFragment extends DialogFragment {
         visRomKnapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //åpner romliste aktiviteten
+                //Åpner romliste-aktiviteten
                 Intent ivisrom = new Intent(getActivity(), RomListe.class);
-                //sender info om bygget med intenten
+                //Sender info om bygget med intentet
                 ivisrom.putExtra(getString(R.string.byggUt), adresseBox.getText());
                 ivisrom.putExtra(getString(R.string.bygg_id),Id);
                 ivisrom.putExtra(getString(R.string.bygg_etasjer),antEtasjer);
@@ -79,7 +78,7 @@ public class VisInfoDialogFragment extends DialogFragment {
         });
     }
 
-    //klasse som henter ut et bygg fra webserver
+    //Klasse som henter ut et bygg fra webserver
     private class GetByggJSON extends AsyncTask<String, Void,String> {
 
         @Override
@@ -109,7 +108,7 @@ public class VisInfoDialogFragment extends DialogFragment {
                     try {
                         JSONArray mat = new JSONArray(output);
 
-                        //skal ha et spesifikt byyg, så henter ut det ene bygget i arrayen
+                        //Skal ha et spesifikt byyg, så henter ut det ene bygget i arrayen
                         JSONObject jsonobject = mat.getJSONObject(0);
                         String id = jsonobject.getString("id");
                         String beskrivelse = jsonobject.getString("Beskrivelse");
@@ -132,13 +131,13 @@ public class VisInfoDialogFragment extends DialogFragment {
 
         @Override
         protected void onPostExecute(String s) {
-            //viser feilmelding hvis webserver er nede
+            //Viser feilmelding hvis webserver er nede
             if(s.equals("")) {
-                adresseBox.setText("klarte ikke hente fra server");
+                adresseBox.setText(getString(R.string.serverFeil));
             }
             else {
                 String[] splittet = s.split(";");
-                //splitter opp jsonstrengen og viser data til bruker
+                //Splitter opp jsonstrengen og viser data til bruker
                 adresseBox.setText(splittet[2]);
                 koordinater = splittet[3];
                 String splittetKoordinater[] = koordinater.split(",");

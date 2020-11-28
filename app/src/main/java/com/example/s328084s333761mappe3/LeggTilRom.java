@@ -27,7 +27,7 @@ public class LeggTilRom extends AppCompatActivity {
         setContentView(R.layout.legg_til_rom);
         setTitle(R.string.leggTilRom);
 
-        //henter ut info som ble sendt med intenten
+        //Henter ut info som ble sendt med intentet
         Intent i = this.getIntent();
         bygg_Id = i.getExtras().getString(getString(R.string.byggUt));
         antallEtasjer = i.getExtras().getString(getString(R.string.antall_etasjer));
@@ -42,7 +42,7 @@ public class LeggTilRom extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.leggtil_meny, menu);
-        //gjør ikonet svart
+        //Gjør ikonet svart
         MenuItem lagreItem = menu.findItem(R.id.lagreAction);
         Drawable lagreIcon = DrawableCompat.wrap(lagreItem.getIcon());
         ColorStateList colorSelector = ResourcesCompat.getColorStateList(getResources(), R.color.black, getTheme());
@@ -72,12 +72,12 @@ public class LeggTilRom extends AppCompatActivity {
         String feilMelding = "";
         String feilMelding2 = "";
         Boolean utfylt = true;
-        //sjekker at alle felter er fylt ut korrekt
+        //Sjekker at alle felter er fylt ut korrekt
         if (romNrTekst.equals("")) {
             feilMelding += getString(R.string.feilRomNr);
             utfylt = false;
-            //siden romNr på oslomet kan bestå av bokstaver, tall og punktum sjekker vi ikke noe mer enn at det er fylt inn
-            //hvis vi kun hadde hatt tall som romnr ville vi sjekket at det som var fylt inn var et tall
+            //Siden romNr på oslomet kan bestå av bokstaver, tall og punktum sjekker vi ikke noe mer enn at det er fylt inn
+            //Hvis vi kun hadde hatt tall som romnr ville vi sjekket at det som var fylt inn var et tall
         }
         if (etasjeNrText.equals("")) {
             if(!feilMelding.equals("")) {
@@ -89,7 +89,7 @@ public class LeggTilRom extends AppCompatActivity {
         else {
             int etasjeNr;
             try {
-                //sjekker at etasjenummer er et heltall fra 1 til 20
+                //Sjekker at etasjenummer er et heltall mellom 1 og 20
                 etasjeNr = Integer.parseInt(etasjeNrText);
                 if( etasjeNr> 20 || etasjeNr < 1) {
                     if(!feilMelding.equals("")) {
@@ -100,7 +100,7 @@ public class LeggTilRom extends AppCompatActivity {
                     feilMelding2 += getString(R.string.etasjenr_feil);
                 }
                 else {
-                    //sjekker om etasjenr er høyere enn antall etasjer
+                    //Sjekker om etasjenr er høyere enn antall etasjer
                     int antall = Integer.parseInt(antallEtasjer);
                     if(etasjeNr > antall) {
                         if(!feilMelding.equals("")) {
@@ -130,7 +130,7 @@ public class LeggTilRom extends AppCompatActivity {
             utfylt = false;
         }
         else {
-            //sjekker at kapasitet er et heltall større enn 0
+            //Sjekker at kapasitet er et heltall større enn 0
             int kapasitet;
             try {
                 kapasitet = Integer.parseInt(kapasitetTekst);
@@ -160,12 +160,12 @@ public class LeggTilRom extends AppCompatActivity {
             utfylt = false;
         }
 
-        //kaller funsjon for å legge til rom på webserver
+        //Kaller funsjon for å legge til rom på webserver
         if(utfylt){
             jsonLeggTil(beskrivelseTekst,romNrTekst,kapasitetTekst,etasjeNrText);
             finish();
         }
-        //viser feilmelding til bruker
+        //Viser feilmelding til bruker
         else {
             feilMelding += " " + getString(R.string.ikkeFyltUtKorrekt) +". ";
             Toast.makeText(getApplicationContext(),feilMelding + feilMelding2, Toast.LENGTH_SHORT).show();
@@ -173,13 +173,13 @@ public class LeggTilRom extends AppCompatActivity {
     }
 
     public void jsonLeggTil(String beskrivelse, String romNr, String kapasitet, String etasjeNr) {
-        //formaterer mellomrom, siden httpurlconnection ikke takler vanlige mellomrom i urlen
+        //Formaterer mellomrom, siden httpurlconnection ikke takler vanlige mellomrom i url-en
         String[] splittetBeskrivelse = beskrivelse.split("\\s+");
         String formatertBeskrivelse = splittetBeskrivelse[0];
         for (int i = 1; i < splittetBeskrivelse.length; i++) {
             formatertBeskrivelse += "%20" + splittetBeskrivelse[i];
         }
-        //lager SendJSON task for å legge inn rom på webserver
+        //Lager SendJSON task for å legge inn rom på webserver
         String json = "http://student.cs.hioa.no/~s333761//jsoninRom.php/?Bygg_id="+bygg_Id + "&EtasjeNr=" + etasjeNr + "&RomNr="
                 + romNr + "&Kapasitet=" + kapasitet + "&Beskrivelse=" + formatertBeskrivelse;
         SendJSON task = new SendJSON();

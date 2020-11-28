@@ -16,7 +16,7 @@ public class RomAdapter extends ArrayAdapter<Rom> {
 
     @Override
     public View getView(int posisjon, View convertView, ViewGroup parent) {
-        //Får tak i møte-objektet for denne posisjonen
+        //Får tak i rom-objektet for denne posisjonen
         Rom rom = getItem(posisjon);
         //Sjekker om en eksisterende view blir brukt, hvis ikke inflater vi viewet
         if (convertView == null) {

@@ -25,11 +25,11 @@ public class LeggTilBygg extends AppCompatActivity {
     String adresseStreng;
     String koordinaterStreng;
 
-    //funksjon som kalles når man trykker tilbake på mobilen
+    //Funksjon som kalles når man trykker tilbake på mobilen
     @Override
     public void onBackPressed() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //lagring av bygg er avbrutt, fjerner derfor markøren som ble opprettet
+        //Lagring av bygg er avbrutt, fjerner derfor markøren som ble opprettet
         int antall = prefs.getInt(getString(R.string.antallMarkers), 0);
         antall = antall - 1;
         SharedPreferences.Editor editor = prefs.edit();
@@ -46,15 +46,15 @@ public class LeggTilBygg extends AppCompatActivity {
 
         setTitle(R.string.leggTilBygg);
 
-        //henter ut infoen som ble sendt med intentet
+        //Henter ut infoen som ble sendt med intentet
         Intent i = this.getIntent();
         adresseStreng = i.getExtras().getString(getString(R.string.adresse));
         koordinaterStreng = i.getExtras().getString(getString(R.string.koordinater));
         koordinater = (TextView) findViewById(R.id.koordinaterInn);
         adresse = (TextView) findViewById(R.id.adresseInn);
-        //setter inn adresse og koordinater i boksene deres
+        //Setter inn adresse og koordinater i boksene deres
         adresse.setText(adresseStreng);
-        //viser bare de 2 første decimalene av koordinatene
+        //Viser bare de to første desimalene i koordinatene
         String splittet[] = koordinaterStreng.split(",");
         String formatertKoordinater = splittet[0].substring(0,5) +"," + splittet[1].substring(0,5);
         koordinater.setText(formatertKoordinater);
@@ -67,7 +67,7 @@ public class LeggTilBygg extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.leggtil_meny, menu);
-        //gjør iconet svart
+        //Gjør ikonet svart
         MenuItem lagreItem = menu.findItem(R.id.lagreAction);
         Drawable lagreIcon = DrawableCompat.wrap(lagreItem.getIcon());
         ColorStateList colorSelector = ResourcesCompat.getColorStateList(getResources(), R.color.black, getTheme());
@@ -87,22 +87,22 @@ public class LeggTilBygg extends AppCompatActivity {
         return true;
     }
 
-    //funksjon for å legge til et nytt bygg
+    //Funksjon for å legge til et nytt bygg
     public void leggtil() {
 
         String antallEtasjer = antEtasjer.getText().toString();
         String beskrivelseTekst = beskrivelse.getText().toString();
 
-        //sjekker inputen fra bruker og lager feilmelding basert på hva som er feil
+        //Sjekker inputen fra bruker og lager feilmelding basert på hva som er feil
         String feilMelding = "";
         String feilMelding2 = "";
         Boolean utfylt = true;
-        //sjekker at beskrivelse er fylt inn
+        //Sjekker at beskrivelse er fylt inn
         if(beskrivelseTekst.equals("")) {
             feilMelding += getString(R.string.feilBeskrivelse);
             utfylt = false;
         }
-        //sjekker at antall etasjer er fylt inn
+        //Sjekker at antall etasjer er fylt inn
         if ((antallEtasjer.equals(""))) {
             if(!feilMelding.equals("")) {
                 feilMelding += ", ";
@@ -112,7 +112,7 @@ public class LeggTilBygg extends AppCompatActivity {
         }
         else {
             int antEtasjer;
-            //sjekker at antall etasjer er heltall fra 1 til 20
+            //Sjekker at antall etasjer er heltall mellom 1 og 20
             try {
                 antEtasjer = Integer.parseInt(antallEtasjer);
                 if( antEtasjer > 20 || antEtasjer < 1) {
@@ -134,21 +134,21 @@ public class LeggTilBygg extends AppCompatActivity {
             }
 
         }
-        //hvis det ikke er noen feil, legges bygget inn på webserver
+        //Hvis det ikke er noen feil legges bygget inn på webserver
         if(utfylt){
             jsonLeggTil(beskrivelseTekst,adresseStreng,koordinaterStreng,antallEtasjer);
             finish();
         }
-        //hvis det er feil vises feilmelding til bruker
+        //Hvis det er feil vises feilmelding til bruker
         else {
             feilMelding += " " + getString(R.string.ikkeFyltUtKorrekt) + ". ";
             Toast.makeText(getApplicationContext(),feilMelding + feilMelding2, Toast.LENGTH_SHORT).show();
         }
     }
 
-    //funksjon for å legge til et bygg i webserver
+    //Funksjon for å legge til et bygg i webserver
     public void jsonLeggTil(String beskrivelse, String adresse, String koordinater, String antEtasjer) {
-        //Formaterer variabler med mellomrom fordi httpurlconnection ikke takler vanlige mellomrom i urlen
+        //Formaterer variabler med mellomrom fordi httpurlconnection ikke takler vanlige mellomrom i url-en
         String[] splittet = adresse.split("\\s+");
         String formatertAdresse = splittet[0];
         for (int i = 1; i < splittet.length; i++) {
@@ -159,7 +159,7 @@ public class LeggTilBygg extends AppCompatActivity {
         for (int i = 1; i < splittetBeskrivelse.length; i++) {
             formatertBeskrivelse += "%20" + splittetBeskrivelse[i];
         }
-        //kjører sendJSON task for å legge til bygg på webserver
+        //Kjører sendJSON task for å legge til bygg på webserver
         String json = "http://student.cs.hioa.no/~s333761/jsoninBygg.php/?Beskrivelse=" + formatertBeskrivelse + "&Adresse=" + formatertAdresse + "&Koordinater="
                 + koordinater + "&AntEtasjer=" + antEtasjer;
         SendJSON task = new SendJSON();

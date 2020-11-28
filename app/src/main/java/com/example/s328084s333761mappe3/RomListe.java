@@ -58,7 +58,7 @@ public class RomListe extends AppCompatActivity {
         if (item.getItemId() == R.id.leggTilAction) {
             //Når brukeren trykker på pluss-ikonet kjøres leggtil-funksjonen
             Intent leggTilIntent = new Intent(this,LeggTilRom.class);
-            //sender info om bygget med intentet
+            //Sender info om bygget med intentet
             leggTilIntent.putExtra(getString(R.string.byggUt),bygg_id);
             leggTilIntent.putExtra(getString(R.string.antall_etasjer),antEtasjerText);
             startActivity(leggTilIntent);
@@ -74,7 +74,7 @@ public class RomListe extends AppCompatActivity {
         setContentView(R.layout.romliste_layout);
         setTitle(R.string.rom);
 
-        //henter info som ble sendt med intentet
+        //Henter info som ble sendt med intentet
         Intent i = this.getIntent();
         adresseText = i.getExtras().getString(getString(R.string.byggUt));
         antEtasjerText = i.getExtras().getString(getString(R.string.bygg_etasjer));
@@ -89,16 +89,15 @@ public class RomListe extends AppCompatActivity {
         adresse.setText(adresseText);
         antEtasjer.setText(antEtasjerText);
         beskrivelseBox.setText(beskrivelse);
-        //viser bare de 2 første decimalene av koordinatene
+        //Viser bare de to første desimalene av koordinatene
         String splittet[] = koordinater.split(",");
         String formatertKoordinater = splittet[0].substring(0,5) +"," + splittet[1].substring(0,5);
         koordinaterBox.setText(formatertKoordinater);
         //Oppretter en liste med alle rom-objekter
 
-        //henter alle rommene til bygget fra webserver
+        //Henter alle rommene til bygget fra webserver
         GetRomJSON task = new GetRomJSON();
         String json = "http://student.cs.hioa.no/~s333761//jsonoutRom.php/?Bygg_id="+bygg_id;
-
         task.execute(new
                 String[]{json});
 
@@ -108,26 +107,25 @@ public class RomListe extends AppCompatActivity {
     public void oppdater() {
         GetRomJSON task = new GetRomJSON();
         String json = "http://student.cs.hioa.no/~s333761//jsonoutRom.php/?Bygg_id="+bygg_id;
-
         task.execute(new
                 String[]{json});
     }
 
 
-    //oppdaterer listen når brukeren returnerer til aktiviteten
+    //Oppdaterer listen når brukeren returnerer til aktiviteten
     @Override
     public void onResume() {
         super.onResume();
         oppdater();
     }
 
-    //funksjon fro å lage en liste med rom fra jsonstrengen
+    //Funksjon for å lage en liste med rom fra jsonstrengen
     public ArrayList<Rom> lagRomliste(String romJson) {
-        //splitter opp strengen for hvert rom
+        //Splitter opp strengen for hvert rom
         String[] splittet = romJson.split(":");
         ArrayList<Rom> romliste = new ArrayList<>();
         for (String string : splittet) {
-            //splitter opp hvert rom
+            //Splitter opp hvert rom
             String[] splittetRom = string.split(";");
             Rom rom = new Rom();
             rom.Id = Integer.parseInt(splittetRom[0]);
@@ -142,24 +140,24 @@ public class RomListe extends AppCompatActivity {
     }
 
     public ArrayList<Rom> sorterRom(ArrayList<Rom> romListe) {
-        ArrayList<Rom> sortertListe = new ArrayList<>(); //oppretter ny liste
-        sortertListe.add(romListe.get(0)); //legger til det første rommet i innparameter-listen i det sorterte arrayet
+        ArrayList<Rom> sortertListe = new ArrayList<>(); //Oppretter ny liste
+        sortertListe.add(romListe.get(0)); //Legger til det første rommet i innparameter-listen i det sorterte arrayet
         boolean leter; //boolean som sier om vi leter etter riktig plass i sortertListe eller om vi har funnet riktig plass
         for (int i = 1; i < romListe.size(); i++) {
             leter = true;
             String etasje = romListe.get(i).EtasjeNr;
             int etasjeNr = Integer.parseInt(etasje);
-            int plassering = 0; //plasseringen til det originale reservasjonen i den sorterte listen
+            int plassering = 0; //Plasseringen til det originale reservasjonen i den sorterte listen
             while (leter) {
                 String etasjeSortert = sortertListe.get(plassering).getEtasjeNr();
                 int etasjeNrSortert = Integer.parseInt(etasjeSortert);
                 if(etasjeNr < etasjeNrSortert) {
                     //Det nye rommet ligger i en etasje under den vi sjekker mot og skal derfor foran rommet i listen
                     sortertListe.add(plassering,romListe.get(i));
-                    leter = false; //ferdig med dette rommet og avslutter letingen
+                    leter = false; //Ferdig med dette rommet og avslutter letingen
                 }
                 else if (etasjeNr == etasjeNrSortert) {
-                    // hvis de ligger i samme etasje skal det nye rommet ligge bakerst av rommene i den etasjen
+                    //Hvis de ligger i samme etasje skal det nye rommet ligge bakerst av rommene i den etasjen
                     plassering++;
                     if(plassering == sortertListe.size()) {
                         //Hvis plassering er like stor som antall elementer i den sorterte listen
@@ -171,7 +169,7 @@ public class RomListe extends AppCompatActivity {
 
                 }
                 else {
-                    //hvis det nye rommets etasjenr er større en sjekkrommet, skal den legges etter sjekkrommet
+                    //Hvis det nye rommets etasjenr er større en sjekkrommet, skal den legges etter sjekkrommet
                     plassering++;
                     if(plassering == sortertListe.size()) {
                         //Hvis plassering er like stor som antall elementer i den sorterte listen
@@ -217,7 +215,7 @@ public class RomListe extends AppCompatActivity {
                     conn.disconnect();
                     try {
                         JSONArray mat = new JSONArray(output);
-                        //henter ut data fra JSONarrayen og lagrer i en streng
+                        //Henter ut data fra JSONarrayen og lagrer i en streng
                         for (int i = 0; i < mat.length(); i++) {
                             JSONObject jsonobject = mat.getJSONObject(i);
                             String id = jsonobject.getString("id");
@@ -248,10 +246,10 @@ public class RomListe extends AppCompatActivity {
             ListView lv = (ListView) findViewById(R.id.liste);
 
             if(!s.equals("")) {
-                //lager en liste med rom fra jsonstrengen
+                //Lager en liste med rom fra jsonstrengen
                 ArrayList<Rom> rom = lagRomliste(s);
                 rom = sorterRom(rom);
-                //setter inn i listview
+                //Setter inn i listview
                 final RomAdapter adapter = new RomAdapter(RomListe.this,rom);
                 lv.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
@@ -259,7 +257,7 @@ public class RomListe extends AppCompatActivity {
                     @Override public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         Rom data = adapter.getItem(i);
                         Intent reservasjonIntent = new Intent(RomListe.this,RomReservasjonListe.class); //Åpne romreservasjon her
-                        //sender med info om det valgte rommet
+                        //Sender med info om det valgte rommet
                         reservasjonIntent.putExtra(getString(R.string.romUt),data.Id);
                         reservasjonIntent.putExtra(getString(R.string.romEtasje),data.EtasjeNr);
                         reservasjonIntent.putExtra(getString(R.string.romBeskrivelse),data.Beskrivelse);

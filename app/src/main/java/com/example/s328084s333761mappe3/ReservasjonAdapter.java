@@ -23,7 +23,6 @@ public class ReservasjonAdapter extends ArrayAdapter<RomReservasjon> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.romreservasjon_view, parent, false);
         }
 
-        //TextView romNr = (TextView) convertView.findViewById(R.id.romNrView);
         TextView dato = (TextView) convertView.findViewById(R.id.datoView);
         TextView tidFra = (TextView) convertView.findViewById(R.id.tidFraView);
         TextView tidTil = (TextView) convertView.findViewById(R.id.tidTilView);

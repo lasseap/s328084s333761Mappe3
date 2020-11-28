@@ -35,7 +35,7 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.legg_til_romreservasjon);
 
-        //henter info som ble sendt med intenten
+        //Henter info som ble sendt med intentet
         Intent i = this.getIntent();
         rom_id = i.getExtras().getInt(getString(R.string.romUt));
         romNr = i.getExtras().getString(getString(R.string.romNr));
@@ -120,7 +120,7 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.leggtil_meny, menu);
-        //gjør ikonet svart
+        //Gjør ikonet svart
         MenuItem lagreItem = menu.findItem(R.id.lagreAction);
         Drawable lagreIcon = DrawableCompat.wrap(lagreItem.getIcon());
         ColorStateList colorSelector = ResourcesCompat.getColorStateList(getResources(), R.color.black, getTheme());
@@ -146,18 +146,18 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
         String dato = datoBoks.getText().toString();
         String tilTid = tilTidBoks.getText().toString();
         String fraTid = fraTidBoks.getText().toString();
-        //sjekker at inputen fra bruker er korrekt
+        //Sjekker at inputen fra bruker er korrekt
         String feilMelding = "";
         String feilMelding2 = "";
         Boolean utfylt = true;
-        //sjekker at alle felter er fylt ut korrekt
+        //Sjekker at alle felter er fylt ut korrekt
         if (dato.equals("")) {
             feilMelding += getString(R.string.feilDato);
             utfylt = false;
         }
         String[] splittetFra = fraTid.split(":");
         String[] splittetTil = tilTid.split(":");
-        //sjekker at start er før slutt
+        //Sjekker at start er før slutt
         try {
             int fraTime = Integer.parseInt(splittetFra[0]);
             int fraMin = Integer.parseInt(splittetFra[1]);
@@ -189,13 +189,13 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
             utfylt = false;
         }
 
-        //viser feilmelding til bruker
+        //Viser feilmelding til bruker
         if(!utfylt) {
             feilMelding += " " + getString(R.string.ikkeFyltUtKorrekt) + ". ";
             Toast.makeText(getApplicationContext(),feilMelding + feilMelding2, Toast.LENGTH_SHORT).show();
         }
         else {
-            //sjekker om rommet allerede er reservert i tidsrommet
+            //Sjekker om rommet allerede er reservert i tidsrommet
             Boolean opptatt = false;
             //henter listen med reservasjoner
             ArrayList<RomReservasjon> liste = RomReservasjonListe.reservasjonliste();
@@ -207,11 +207,11 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
 
                 }
             }
-            //viser melding om at den tiden allerede er reservert til bruker
+            //Viser melding om at den tiden allerede er reservert til bruker
             if (opptatt) {
                 Toast.makeText(getApplicationContext(),getString(R.string.opptatt), Toast.LENGTH_SHORT).show();
             }
-            //kaller funksjon for å legge til romreservasjon
+            //Kaller funksjon for å legge til romreservasjon
             else {
                 jsonLeggTil(dato, fraTid, tilTid);
                 finish();
@@ -221,7 +221,7 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
 
     }
 
-    //funsjon for å kalle SendJson for å legge til romservasjon
+    //Funksjon for å kalle SendJson for å legge til romservasjon
     public void jsonLeggTil(String dato, String fra, String til) {
         String json = "http://student.cs.hioa.no/~s333761//jsoninRomReservasjon.php/?Rom_id="+ rom_id + "&Dato=" + dato + "&TidFra="
                 + fra + "&TidTil=" + til;
@@ -230,7 +230,7 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
 
     }
 
-    //funksjon som sjekker om rommet allerede er reservert
+    //Funksjon som sjekker om rommet allerede er reservert
     public boolean opptattSjekk(RomReservasjon reservasjon, String dato, String fraTid, String tilTid) {
         //sjekker om det er samme dag
         if(reservasjon.dato.equals(dato)) {
@@ -247,26 +247,49 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
                 int fraMinSjekk = Integer.parseInt(splittetFraSjekk[1]);
                 int tilTimeSjekk = Integer.parseInt(splittetTilSjekk[0]);
                 int tilMinSjekk = Integer.parseInt(splittetTilSjekk[1]);
-                //sjekker om nye reservasjonen starter før eksisterende og om den isåfall slutter før den eksisterende starter
+                //Sjekker om nye reservasjonen starter etter eksisterende og om den eksisterende slutter før den nye starter
                 if(fraTime > fraTimeSjekk) {
                     if(tilTimeSjekk > fraTime) {
+                        /*Dersom den nye reservasjonen sin starttime er større den eksisterendes starttime
+                        og den nye reservasjonen sitt sluttidspunkt er før den eksisterendes sluttidspunkt så overlapper
+                        en del av tidsrommet, det vil si at reservasjonen ikke kan legges til og vi
+                        returnerer true
+                         */
                         return true;
                     }
                     if(tilTimeSjekk == fraTime) {
                         if(tilMinSjekk > fraMin) {
+                            /*Dersom den nye reservasjonen sin startime er lik den eksisterende sin sluttime
+                            og den nye reservasjonen sitt startminutt er mindre enn den eksisterende sitt sluttminutt
+                            så overlapper en del av tidsrommet, det vil si at reservasjonen ikke kan legges til
+                            og vi returnerer true
+                             */
                             return true;
                         }
                     }
                 }
-                //sjekker om de starter på samme time
+                //Sjekker om de starter på samme time
                 else if(fraTime == fraTimeSjekk) {
-                    //sjekker om nye er ferdig før eksisterende
+                    //Sjekker om nye er ferdig før eksisterende
                     if(fraMin > fraMinSjekk) {
                         if(tilTimeSjekk > fraTime) {
+                            /*Dersom den nye reservasjonen sin starttime er lik den eksisterende sin starttime
+                            og den nye reservasjonen sitt startminutt er større enn den eksisterende sitt startminutt
+                            og den nye reservasjonen sin starttime er mindre enn den eksisterende sin sluttime
+                            så overlapper en del av tidsrommet, det vil si at reservasjonen ikke kan legges til
+                            og vi returnerer true
+                             */
                             return true;
                         }
                         if(tilTimeSjekk == fraTime) {
                             if(tilMinSjekk > fraMin) {
+                                /*Dersom den nye reservasjonen sin starttime er lik den eksisterende sin starttime
+                                og den nye reservasjonen sitt startminutt er større enn den eksisterende sitt startminutt
+                                og den nye reservasjonen sin starttime er lik den eksisterende sin sluttime
+                                og den nye reservasjonen sitt startminutt er mindre enn den eksisterende sitt sluttminutt
+                                så overlapper en del av tidsrommet, det vil si at reservasjonen ikke kan legges til
+                                og vi returnerer true
+                                 */
                                 return true;
                             }
                         }
@@ -274,41 +297,64 @@ public class LeggTilRomReservasjon extends AppCompatActivity implements DatePick
                     else {
                         if(tilTime == fraTimeSjekk){
                             if(tilMin > fraMinSjekk){
+                                /*Dersom den nye reservasjonen sin starttime er lik den eksisterende sin starttime
+                                og den nye reservasjonen sin sluttime er lik den eksisterende sin starttime
+                                og den nye reservasjonen sitt sluttminutt er større enn den eksisterende sitt startminutt
+                                så overlapper en del av tidsrommet, det vil si at reservasjonen ikke kan legges til
+                                og vi returnerer true
+                                */
                                 return true;
                             }
                         }
                         else {
+                            /*Dersom den nye reservasjonen sin starttime er lik den eksisterende sin starttime
+                            og den nye reservasjonen sin sluttime ikke er lik den eksisterende sin starttime
+                            så overlapper en del av tidsrommet, det vil si at reservasjonen ikke kan legges til
+                            og vi returnerer true
+                            */
                             return true;
                         }
 
                     }
                 }
-                //sjekker om nye starter etter eksisterende
+                //Sjekker om nye starter før eksisterende
                 else {
-                    //sjekker om eksisterende er ferdig før nye begynner
+                    //Sjekker om nye er ferdig før den eksisterende begynner
                     if(tilTime > fraTimeSjekk) {
+                        /*Dersom den nye reservasjonen sin starttime er mindre den eksisterende sin starttime
+                        og den nye reservasjonen sin sluttime er større enn den eksisterende sin starttime
+                        så overlapper en del av tidsrommet, det vil si at reservasjonen ikke kan legges til
+                        og vi returnerer true
+                         */
                         return true;
                     }
                     else {
                         if(tilTime == fraTimeSjekk) {
                             if(tilMin > fraMinSjekk) {
+                                /*Dersom den nye reservasjonen sin starttime er mindre den eksisterende sin starttime
+                                og den nye reservasjonen sin sluttime er lik den eksisterende sin starttime
+                                og den nye reservasjonen sitt sluttminutt er større enn den eksisterende sitt startminutt
+                                så overlapper en del av tidsrommet, det vil si at reservasjonen ikke kan legges til
+                                og vi returnerer true
+                                 */
                                 return  true;
                             }
                         }
                     }
                 }
             } catch (Exception e) {
-
+                //Hvis det er noe galt med parsingen av tall så returneres true slik at objektet ikke opprettes
+                return true;
             }
 
         }
-        //returnerer at det ikke er reservert
+        //Returnerer at det ikke er reservert
         return false;
     }
 
     @Override
     protected void onDestroy() {
-        //Når brukeren går ut av leggetilsiden skal velgDato- og velgTidspunkt-variablene nullstilles
+        //Når brukeren går ut av leggetil-siden skal velgDato- og velgTidspunkt-variablene nullstilles
         //slik at disse ikke blir satt når en bruker skal legge til en annen romreservasjon
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(getString(R.string.velgDato),"");

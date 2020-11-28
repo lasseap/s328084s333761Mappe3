@@ -36,7 +36,7 @@ public class RomReservasjonListe extends AppCompatActivity {
     TextView beskrivelse;
     static ArrayList<RomReservasjon> reservasjoner;
 
-    //funksjon som returnerer listen med romreservasjoner
+    //Funksjon som returnerer listen med romreservasjoner
     public static ArrayList<RomReservasjon> reservasjonliste() {
         return reservasjoner;
     }
@@ -46,7 +46,7 @@ public class RomReservasjonListe extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.liste_meny, menu);
-        //gjør ikonet svart
+        //Gjør ikonet svart
         MenuItem leggTilItem = menu.findItem(R.id.leggTilAction);
         Drawable leggTilIcon = DrawableCompat.wrap(leggTilItem.getIcon());
         ColorStateList colorSelector = ResourcesCompat.getColorStateList(getResources(), R.color.black, getTheme());
@@ -60,7 +60,7 @@ public class RomReservasjonListe extends AppCompatActivity {
         if (item.getItemId() == R.id.leggTilAction) {
             //Når brukeren trykker på pluss-ikonet sendes bruker til LeggTilRomReservasjon-aktivitet
             Intent leggTilIntent = new Intent(this,LeggTilRomReservasjon.class);
-            //sender med info om rommet
+            //Sender med info om rommet
             leggTilIntent.putExtra(getString(R.string.romUt),rom_id);
             leggTilIntent.putExtra(getString(R.string.romNr),romNrText);
             startActivity(leggTilIntent);
@@ -77,7 +77,7 @@ public class RomReservasjonListe extends AppCompatActivity {
 
         setTitle(R.string.reservasjoner);
 
-        //henter infoen som ble sendt med intenten
+        //Henter infoen som ble sendt med intenten
         Intent i = this.getIntent();
         rom_id = i.getExtras().getInt(getString(R.string.romUt));
         romNrText = i.getExtras().getString(getString(R.string.romNr));
@@ -85,14 +85,12 @@ public class RomReservasjonListe extends AppCompatActivity {
         beskrivelseText = i.getExtras().getString(getString(R.string.romBeskrivelse));
         etasjeNrText = i.getExtras().getString(getString(R.string.romEtasje));
 
-
         etasjeNr = (TextView) findViewById(R.id.etasjeNr);
         romNr = (TextView) findViewById(R.id.romNr);
         kapasitet = (TextView) findViewById(R.id.kapasitet);
         beskrivelse = (TextView) findViewById(R.id.beskrivelse);
 
-        //henter alle romreservasjoner av rommet
-
+        //Henter alle romreservasjoner av rommet
         GetRomReservasjonJSON task = new GetRomReservasjonJSON();
         task.execute(new
                 String[]{"http://student.cs.hioa.no/~s333761//jsonoutRomReservasjon.php/?Rom_id="+rom_id});
@@ -110,12 +108,9 @@ public class RomReservasjonListe extends AppCompatActivity {
         GetRomReservasjonJSON task = new GetRomReservasjonJSON();
         task.execute(new
                 String[]{json});
-
-
     }
 
-
-    //oppdaterer listen når brukeren returnerer til aktiviteten
+    //Oppdaterer listen når brukeren returnerer til aktiviteten
     @Override
     public void onResume() {
         super.onResume();
@@ -124,11 +119,11 @@ public class RomReservasjonListe extends AppCompatActivity {
 
     //Funksjon som lager en liste med romreservasjoner fra jsonstrengen
     public ArrayList<RomReservasjon> lagRomReservasjonliste(String romJson) {
-        //splitter opp romreservasjonene
+        //Splitter opp romreservasjonene
         String[] splittet = romJson.split("_");
         ArrayList<RomReservasjon> reservasjonliste = new ArrayList<>();
         for (String string : splittet) {
-            //splitter opp feltene i romreservasjonen
+            //Splitter opp feltene i romreservasjonen
             String[] splittetRom = string.split(";");
             RomReservasjon reservasjon = new RomReservasjon();
             reservasjon.Id = Integer.parseInt(splittetRom[0]);
@@ -143,8 +138,8 @@ public class RomReservasjonListe extends AppCompatActivity {
 
     //Metode som tar inn en liste med reservasjons-objekter og sorterer disse på dato og tid
     public ArrayList<RomReservasjon> sorterReservasjoner(ArrayList<RomReservasjon> reservasjoner) {
-        ArrayList<RomReservasjon> sortertListe = new ArrayList(); //oppretter en ny liste med reservasjons-objekter
-        sortertListe.add(reservasjoner.get(0)); //legger til det første reservasjonen i innparameter-listen i det sorterte arrayet
+        ArrayList<RomReservasjon> sortertListe = new ArrayList(); //Oppretter en ny liste med reservasjons-objekter
+        sortertListe.add(reservasjoner.get(0)); //Legger til det første reservasjonen i innparameter-listen i det sorterte arrayet
         boolean leter; //boolean som sier om vi leter etter riktig plass i sortertListe eller om vi har funnet riktig plass
         for (int i = 1; i < reservasjoner.size(); i++) {
             leter = true;
@@ -154,7 +149,7 @@ public class RomReservasjonListe extends AppCompatActivity {
             int dag = Integer.parseInt(splittet[0]);
             int måned = Integer.parseInt(splittet[1]);
             int år = Integer.parseInt(splittet[2]);
-            int plassering = 0; //plasseringen til det originale reservasjonen i den sorterte listen
+            int plassering = 0; //Plasseringen til det originale reservasjonen i den sorterte listen
             while(leter) {
                 String datoSortert = sortertListe.get(plassering).dato;
                 //Splitter opp datoen for å lage egne int-variabler for dag, måned og år som vi kan sammenligne
@@ -196,8 +191,8 @@ public class RomReservasjonListe extends AppCompatActivity {
                                 }
                                 else {
                                     //Originalreservasjonen sin minutt-verdi er lavere enn reservasjonen vi sammenligner med i den sorterte listen
-                                    //som betyr at originalreservasjonen finner sted før møtet vi sammenligner med. Originalmøtet legges derfor
-                                    //inn på plassen foran møtet vi sammenligner med
+                                    //som betyr at originalreservasjonen finner sted før reservasjonen vi sammenligner med. Originalreservasjonen legges derfor
+                                    //inn på plassen foran reservasjonen vi sammenligner med
                                     sortertListe.add(plassering,reservasjoner.get(i));
                                     leter = false;
                                 }
@@ -205,7 +200,7 @@ public class RomReservasjonListe extends AppCompatActivity {
                             else if(timeSortert < time) {
                                 //Hvis originalreservasjonen sin time-verdi er høyere enn reservasjonen vi sammenligner med i den sorterte listen
                                 //så finner originalreservasjonen sted etter reservasjonen vi sammenligner med, og originalreservasjonen skal derfor legges
-                                // inn bak reservasjonen i den sorterte listen. Øker derfor plassering-variabelen med en
+                                //inn bak reservasjonen i den sorterte listen. Øker derfor plassering-variabelen med en
                                 plassering++;
                                 if(plassering == sortertListe.size()) {
                                     sortertListe.add(reservasjoner.get(i));
@@ -223,7 +218,7 @@ public class RomReservasjonListe extends AppCompatActivity {
                         else if(dagSortert < dag) {
                             //Hvis originalreservasjonen sin dag-verdi er høyere enn reservasjonen vi sammenligner med i den sorterte listen
                             //så finner originalreservasjonen sted etter reservasjonen vi sammenligner med, og originalreservasjonen skal derfor legges
-                            // inn bak reservasjonen i den sorterte listen. Øker derfor plassering-variabelen med en
+                            //inn bak reservasjonen i den sorterte listen. Øker derfor plassering-variabelen med en
                             plassering++;
                             if(plassering == sortertListe.size()) {
                                 sortertListe.add(reservasjoner.get(i));
@@ -241,7 +236,7 @@ public class RomReservasjonListe extends AppCompatActivity {
                     else if(månedSortert < måned) {
                         //Hvis originalreservasjonen sin måned-verdi er høyere enn reservasjonen vi sammenligner med i den sorterte listen
                         //så finner originalreservasjon sted etter reservasjonen vi sammenligner med, og originalreservasjonen skal derfor legges
-                        // inn bak reservasjonen i den sorterte listen. Øker derfor plassering-variabelen med en
+                        //inn bak reservasjonen i den sorterte listen. Øker derfor plassering-variabelen med en
                         plassering++;
                         if(plassering == sortertListe.size()) {
                             sortertListe.add(reservasjoner.get(i));
@@ -259,7 +254,7 @@ public class RomReservasjonListe extends AppCompatActivity {
                 else if(årSortert < år) {
                     //Hvis originalreservasjonen sin år-verdi er høyere enn reservasjonen vi sammenligner med i den sorterte listen
                     //så finner originalreservasjonen sted etter reservasjonen vi sammenligner med, og originalreservasjonen skal derfor legges
-                    // inn bak reservasjonen i den sorterte listen. Øker derfor plassering-variabelen med en
+                    //inn bak reservasjonen i den sorterte listen. Øker derfor plassering-variabelen med en
                     plassering++;
                     if(plassering == sortertListe.size()) {
                         sortertListe.add(reservasjoner.get(i));
@@ -306,7 +301,7 @@ public class RomReservasjonListe extends AppCompatActivity {
                     conn.disconnect();
                     try {
                         JSONArray mat = new JSONArray(output);
-                        //henter ut data fra arrayen og lagrer som en streng
+                        //Henter ut data fra arrayen og lagrer som en streng
                         for (int i = 0; i < mat.length(); i++) {
                             JSONObject jsonobject = mat.getJSONObject(i);
                             String id = jsonobject.getString("id");
@@ -335,10 +330,10 @@ public class RomReservasjonListe extends AppCompatActivity {
 
             ListView lv = (ListView) findViewById(R.id.liste);
             if(!s.equals("")) {
-                //lager en liste med romreservasjoner fra jsonstrengen
+                //Lager en liste med romreservasjoner fra jsonstrengen
                 reservasjoner = lagRomReservasjonliste(s);
                 reservasjoner = sorterReservasjoner(reservasjoner);
-                // setter de inn i listen
+                //Setter de inn i listen
                 final ReservasjonAdapter adapter = new ReservasjonAdapter(RomReservasjonListe.this, reservasjoner);
                 lv.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
